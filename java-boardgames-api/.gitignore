@@ -1,0 +1,26 @@
+# Gradle specific files
+.gradle/
+build/
+gradle
+
+# IDE specific files
+/.idea/
+/*.iml
+/.vscode/
+
+# OS specific files
+.DS_Store
+Thumbs.db
+
+# Log files
+*.log
+
+# Temporary files
+*.tmp
+*.temp
+
+# Ignore Gradle project-specific cache directory
+.gradle
+
+# Ignore Gradle build output directory
+build

@@ -1,5 +1,4 @@
 TODO list:
-- correct repo name
 - add java backends
 - check it all works locally
 - update each README
