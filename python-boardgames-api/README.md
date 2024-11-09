@@ -16,11 +16,11 @@ Simple example of a Python/Flask Application providing a list of boardgames with
 python3 is required.
 
 Run the Application localy with this command and check the url returned
-> python3 main.start
+> python3 main.py
 
-Ping the app on http://127.0.0.1:5000/ping
+Ping the app on http://127.0.0.1:5001/ping
 
-Check the list of boardgames on http://127.0.0.1:5000/boardgames
+Check the list of boardgames on http://127.0.0.1:5001/boardgames
 
 # How the application works
 
