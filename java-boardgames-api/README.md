@@ -2,6 +2,10 @@
 
 Simple Java Spring Boot application with an enpoint that return a list of boardgames
 
+# How to run the tests
+run:
+> ./gradlew test
+
 # How to build the app
 run:
 > ./gradlew build

@@ -2,12 +2,21 @@
 
 Simple example of a Python/Flask Application providing a list of boardgames with a GET endpoint
 
+# Setup the application localy
+- create a virtual env with these commands
+> python3 -m venv venv
+> source venv/bin/activate
+
+- build the application
+> pip install -r requirements.txt
+
+
 # Run the application
 
 python3 is required.
 
 Run the Application localy with this command and check the url returned
-> python main.start
+> python3 main.start
 
 Ping the app on http://127.0.0.1:5000/ping
 

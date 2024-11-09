@@ -1,9 +1,8 @@
 TODO list:
-- add java backends
+- Put any port and url in env variable/properties in each application
 - check it all works locally
 - update each README
 - update mono repo documentation concept of monorepo and how it apply to this one.
-- Put any port and url in env variable/properties in each application
 - setup github action with unit tests for all applications
 - deploy it all on AKS
 - add E2E tests with playwright in the pipeline

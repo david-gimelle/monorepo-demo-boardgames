@@ -1,6 +1,6 @@
 # React Boardgames Lists Demo Application
 
-Simple example of a React Application managing a list of boardgames provided by different apis in Nodejs, Python and Java
+Simple example of a React Application managing a list of boardgames provided by different apis in Nodejs, Python and Java. It displays detailed error message for each api it's not able to reach.
 
 # Install and Run the application react application
 
@@ -17,7 +17,7 @@ Check the url returned by the previous command, usually something like http://lo
 The application call 3 service-apis as boardgames's datasources: 
 - [NodeJS Boardgames API](./nodejsboargames-api/README.md) 
 - [Python Boardgames API](./python-boardgames-api/README.md) 
-- [Python Boardgames API](./python-boardgames-api/README.md) 
+- [Java Boardgames API](./java-boardgames-api/README.md) 
 
 Check the readme of each service to see how to start them.
 
