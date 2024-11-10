@@ -1,8 +1,9 @@
 import express, { Application } from 'express';
 import router from './routes';
+import config from '../config';
 
 const app: Application = express();
-const port: number = parseInt(process.env.PORT || '3000', 10);
+const port: number = config.port;
 
 app.use('/', router);
 

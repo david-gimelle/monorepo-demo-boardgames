@@ -10,7 +10,6 @@ Simple example of a Python/Flask Application providing a list of boardgames with
 - build the application
 > pip install -r requirements.txt
 
-
 # Run the application
 
 python3 is required.

@@ -1,6 +1,6 @@
 # NodeJs Boardgames Lists Demo Application
 
-Simple example of a nodeJS/Express Application providing a list of boardgames with a GET endpoint
+Simple example of a nodeJS/Express Application in typescript providing a list of boardgames with a GET endpoint
 
 # Run the application
 

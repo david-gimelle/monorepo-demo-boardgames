@@ -14,7 +14,7 @@ const defaultBoardGame: BoardGame = {
 };
 
 router.get('/ping', (req: Request, res: Response) => {
-  res.send('Ping');
+  res.send('Pong');
 });
 
 router.get('/boardgames', (req: Request, res: Response) => {
