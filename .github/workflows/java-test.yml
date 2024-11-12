@@ -24,4 +24,3 @@ jobs:
       run: |
         cd java-boardgames-api
         ./gradlew build
-      working-directory: ./java-boardgames-api
