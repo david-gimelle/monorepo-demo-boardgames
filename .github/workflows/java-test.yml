@@ -22,5 +22,7 @@ jobs:
 
     - name: Build with Gradle
       run: |
+        pwd
+        ls -la
         cd java-boardgames-api
         ./gradlew build
