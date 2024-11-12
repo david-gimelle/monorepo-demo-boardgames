@@ -25,8 +25,9 @@ jobs:
       run: chmod +x ./java-boardgames-api/gradlew
 
     - name: Build with Gradle
-      run: ./java-boardgames-api/gradlew build
+      run: ./gradlew build
+      working-directory: ./java-boardgames-api
 
     - name: Run tests
-      run: ./java-boardgames-api/gradlew test
-      
+      run: ./gradlew test
+      working-directory: ./java-boardgames-api
