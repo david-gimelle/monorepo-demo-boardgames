@@ -25,9 +25,12 @@ jobs:
 
     - name: Install dependencies
       run: npm install
+      working-directory: ./nodejs-boardgames-api
 
     - name: Build the project
       run: npm run build
+      working-directory: ./java-boardgames-api
 
     - name: Run tests
       run: npm test
+      working-directory: ./java-boardgames-api
