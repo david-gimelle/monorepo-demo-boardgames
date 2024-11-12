@@ -1,34 +1,25 @@
-name: Gradle Test
+name: Build
 
 on:
-  pull_request:
-    branches:
-      - main
-      - develop
-      - feature/*
+  push:
 
 jobs:
-  test:
+  build:
     runs-on: ubuntu-latest
-
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
 
-    - name: Set up JDK 21
-      uses: actions/setup-java@v2
+    - name: Checkout sources
+      uses: actions/checkout@v4
+
+    - name: Setup Java
+      uses: actions/setup-java@v4
       with:
         distribution: 'temurin'
-        java-version: '21'
+        java-version: 21
 
-    - name: Grant execute permission for gradlew
-      run: chmod +x ./java-boardgames-api/gradlew
+    - name: Setup Gradle
+      uses: gradle/actions/setup-gradle@v4
 
     - name: Build with Gradle
-      run: |
-        cd java-boardgames-api
-        ./gradlew build
-
-    - name: Run tests
-      run: ./gradlew test
+      run: ./gradlew build
       working-directory: ./java-boardgames-api
