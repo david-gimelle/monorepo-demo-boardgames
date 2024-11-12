@@ -6,10 +6,10 @@ const app: Application = express();
 app.use('/', routes);
 
 describe('GET /ping', () => {
-  it('should return Ping', async () => {
+  it('should return Pong', async () => {
     const res = await request(app).get('/ping');
     expect(res.statusCode).toEqual(200);
-    expect(res.text).toBe('Ping');
+    expect(res.text).toBe('Pong');
   });
 });
 
