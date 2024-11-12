@@ -1,7 +1,6 @@
 # Gradle specific files
 .gradle/
 build/
-gradle
 
 # IDE specific files
 /.idea/
