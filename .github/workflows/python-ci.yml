@@ -24,6 +24,10 @@ jobs:
       working-directory: ./python-boardgames-api
       
     - name: Run tests
-      run: python -m unittest discover tests
+      run: |
+        python -m venv venv
+        source venv/bin/activate
+        pip install -r requirements.txt
+        python -m unittest discover tests
       working-directory: ./python-boardgames-api
 
