@@ -18,12 +18,12 @@ jobs:
 
     - name: Install dependencies
       run: npm install
-      working-directory: ./react-boardgames-api
+      working-directory: ./react-boardgames
 
     - name: Build the project
       run: npm run build
-      working-directory: ./react-boardgames-api
+      working-directory: ./react-boardgames
 
     - name: Run tests
       run: npm test
-      working-directory: ./react-boardgames-api
+      working-directory: ./react-boardgames
