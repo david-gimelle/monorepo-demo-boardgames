@@ -1,61 +1,26 @@
-name: Python CI
-
-on:
-  pull_request:
-
-jobs:
-  build:
-    runs-on: ubuntu-latest
-
-    steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
-
-    - name: Set up Python
-      uses: actions/setup-python@v2
-      with:
-        python-version: '3.x'
-
-    - name: Install dependencies
-      run: |
-        python -m venv venv
-        source venv/bin/activate
-        pip install -r requirements.txt
-
-    - name: Run tests
-      run: |
-        name: Python Application CI
+name: Java Python CI
 
 on:
   push:
-    branches:
-      - main
-  pull_request:
-    branches:
-      - main
-      - develop
-      - feature/*
 
 jobs:
   build:
     runs-on: ubuntu-latest
-
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
 
-    - name: Set up Python
-      uses: actions/setup-python@v2
+    - name: Checkout sources
+      uses: actions/checkout@v4
+
+    - name: Setup Java
+      uses: actions/setup-java@v4
       with:
-        python-version: '3.x'
+        distribution: 'temurin'
+        java-version: 21
 
-    - name: Install dependencies
-      run: |
-        python -m venv venv
-        source venv/bin/activate
-        pip install -r requirements.txt
+    - name: Setup Gradle
+      uses: gradle/actions/setup-gradle@v4
 
-    - name: Run tests
-      run: |
-        source venv/bin/activate
-        python -m unittest discover -s tests
+    - name: Build with Gradle
+      run: ./gradlew build
+      working-directory: ./java-boardgames-api
+      
