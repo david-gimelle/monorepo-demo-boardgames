@@ -15,7 +15,7 @@ class RoutesTestCase(unittest.TestCase):
         response = self.app.get('/boardgames')
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json, [
-            { "name": "Small World", "origin": "Python App", "played": False },
+            { "name": "mall World", "origin": "Python App", "played": False },
             { "name": "Le Havre", "origin": "Python App", "played": False }
         ])
 
