@@ -1,4 +1,4 @@
-name: Python Node.js CI
+name: Python CI
 
 on:
   push:
@@ -25,7 +25,6 @@ jobs:
       
     - name: Run tests
       run: |
-        python -m venv venv
         source venv/bin/activate
         pip install -r requirements.txt
         python -m unittest discover tests
