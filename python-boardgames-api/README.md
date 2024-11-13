@@ -23,7 +23,7 @@ Check the list of boardgames on http://127.0.0.1:5001/boardgames
 
 # How the application works
 
-This application use
+This application uses
 - python 3
 - flask
 
