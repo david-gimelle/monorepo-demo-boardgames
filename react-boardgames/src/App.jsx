@@ -2,12 +2,15 @@ import './App.css';
 import boardGamesImg from "./assets/bgames.jpg";
 import { useState, useEffect } from 'react';
 
+export function getInitialBoardGames() {
+  return [
+    { name: "Catan", origin: "react App", played: false },
+    { name: "Splendor", origin: "react App", played: false },
+  ];
+}
 
 function App() {
-  const [boardGames, setBoardGames] = useState([
-    { name: "Catan", origin:"react App",played: false },
-    { name: "Splendor", origin:"react App",played: false },
-  ]);
+  const [boardGames, setBoardGames] = useState(getInitialBoardGames());
   const [totalPlayed, setTotalPlayed] = useState(0);
   const [nodeJsServerError, setNodeJsServerError] = useState(false);
   const [pythonServerError, setPythonServerError] = useState(false);
