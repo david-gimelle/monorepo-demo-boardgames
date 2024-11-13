@@ -1,0 +1,29 @@
+name: React CI
+
+on:
+  push:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v2
+      with:
+        node-version: '16'
+
+    - name: Install dependencies
+      run: npm install
+      working-directory: ./react-boardgames-api
+
+    - name: Build the project
+      run: npm run build
+      working-directory: ./react-boardgames-api
+
+    - name: Run tests
+      run: npm test
+      working-directory: ./react-boardgames-api
