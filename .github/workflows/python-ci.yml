@@ -1,4 +1,4 @@
-name: Python CI
+name: Python Node.js CI
 
 on:
   push:
@@ -11,51 +11,19 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v4
 
-    - name: Set up Python
-      uses: actions/setup-python@v2
+    - name: Set up Node.js
+      uses: actions/setup-node@v2
       with:
-        python-version: '3.x'
+        node-version: '16'
 
     - name: Install dependencies
-      run: |
-        python -m venv venv
-        source venv/bin/activate
-        pip install -r requirements.txt
+      run: npm install
+      working-directory: ./nodejs-boardgames-api
+
+    - name: Build the project
+      run: npm run build
+      working-directory: ./nodejs-boardgames-api
 
     - name: Run tests
-      run: |
-        name: Python Application CI
-
-on:
-  push:
-    branches:
-      - main
-  pull_request:
-    branches:
-      - main
-      - develop
-      - feature/*
-
-jobs:
-  build:
-    runs-on: ubuntu-latest
-
-    steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
-
-    - name: Set up Python
-      uses: actions/setup-python@v2
-      with:
-        python-version: '3.x'
-
-    - name: Install dependencies
-      run: |
-        python -m venv venv
-        source venv/bin/activate
-        pip install -r requirements.txt
-
-    - name: Run tests
-      run: |
-        source venv/bin/activate
-        python -m unittest discover -s tests
+      run: npm test
+      working-directory: ./nodejs-boardgames-api
