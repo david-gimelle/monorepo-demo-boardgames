@@ -9,7 +9,7 @@ describe('GET /ping', () => {
   it('should return Pong', async () => {
     const res = await request(app).get('/ping');
     expect(res.statusCode).toEqual(200);
-    expect(res.text).toBe('PoOOOng');
+    expect(res.text).toBe('Pong');
   });
 });
 
