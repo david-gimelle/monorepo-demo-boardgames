@@ -1,4 +1,4 @@
-name: Node.js CI
+name: Reactjs CI
 
 on:
   push:
@@ -18,12 +18,12 @@ jobs:
 
     - name: Install dependencies
       run: npm install
-      working-directory: ./nodejs-boardgames-api
+      working-directory: ./reactjs-boardgames
 
     - name: Build the project
       run: npm run build
-      working-directory: ./nodejs-boardgames-api
+      working-directory: ./reactjs-boardgames
 
     - name: Run tests
       run: npm test
-      working-directory: ./nodejs-boardgames-api
+      working-directory: ./reactjs-boardgames

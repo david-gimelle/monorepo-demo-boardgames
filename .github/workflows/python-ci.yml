@@ -1,14 +1,7 @@
-name: Python Application CI
+name: Python CI
 
 on:
   push:
-    branches:
-      - main
-  pull_request:
-    branches:
-      - main
-      - develop
-      - feature/*
 
 jobs:
   build:
@@ -16,10 +9,10 @@ jobs:
 
     steps:
     - name: Checkout code
-      uses: actions/checkout@v2
+      uses: actions/checkout@v4
 
     - name: Set up Python
-      uses: actions/setup-python@v2
+      uses: actions/setup-python@v4 
       with:
         python-version: '3.x'
 
@@ -28,41 +21,11 @@ jobs:
         python -m venv venv
         source venv/bin/activate
         pip install -r requirements.txt
-
+      working-directory: ./python-boardgames-api
+      
     - name: Run tests
       run: |
-        name: Python Application CI
-
-on:
-  push:
-    branches:
-      - main
-  pull_request:
-    branches:
-      - main
-      - develop
-      - feature/*
-
-jobs:
-  build:
-    runs-on: ubuntu-latest
-
-    steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
-
-    - name: Set up Python
-      uses: actions/setup-python@v2
-      with:
-        python-version: '3.x'
-
-    - name: Install dependencies
-      run: |
-        python -m venv venv
-        source venv/bin/activate
         pip install -r requirements.txt
+        python -m unittest discover tests
+      working-directory: ./python-boardgames-api
 
-    - name: Run tests
-      run: |
-        source venv/bin/activate
-        python -m unittest discover -s tests
