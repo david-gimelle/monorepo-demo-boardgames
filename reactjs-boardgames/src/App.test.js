@@ -1,18 +1,38 @@
 // src/App.test.js
 import React from 'react';
-import { render, screen } from '@testing-library/react';
+import { render, screen, act } from '@testing-library/react';
 import App from './App';
 
-test('renders Vite and React logos', () => {
-  render(<App />);
-  const viteLogo = screen.getByAltText('Vite logo');
-  const reactLogo = screen.getByAltText('React logo');
-  expect(viteLogo).toBeInTheDocument();
-  expect(reactLogo).toBeInTheDocument();
+beforeAll(() => {
+  global.fetch = jest.fn((url) => {
+    if (url.includes('/java-api/boardgames')) {
+      return Promise.resolve({
+        json: () => Promise.resolve([]), // Mock an empty array response
+      });
+    }
+    if (url.includes('/python-api/boardgames')) {
+      return Promise.resolve({
+        json: () => Promise.resolve([]), // Mock an empty array response
+      });
+    }
+    if (url.includes('/node-api/boardgames')) {
+      return Promise.resolve({
+        json: () => Promise.resolve([]), // Mock an empty array response
+      });
+    }
+    return Promise.reject(new Error('Unknown URL'));
+  });
 });
 
-test('renders the count button', () => {
-  render(<App />);
-  const button = screen.getByRole('button', { name: /count is/i });
-  expect(button).toBeInTheDocument();
+afterAll(() => {
+  global.fetch.mockClear();
+  delete global.fetch;
+});
+
+test('renders at least one checkbox', async () => {
+  await act(async () => {
+    render(<App />);
+  });
+  const checkboxes = screen.queryAllByRole('checkbox');
+  expect(checkboxes.length).toBeGreaterThan(0);
 });

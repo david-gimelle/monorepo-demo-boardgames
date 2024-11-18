@@ -1,42 +1,55 @@
-#root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
+.App {
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.header {
   text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
 }
 
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
+img {
+  width: 350px;
+  margin: 20px 0
 }
 
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.container {
+  display: flex;
+  align-items: center;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
-  }
+li {
+  padding: 5px 0;
+  border-bottom: 1px solid rgba(57, 28, 28, 0.25);
+  list-style: none;
+  display: flex;
+  justify-content: space-between;
+  width: 300px;
 }
 
-.card {
-  padding: 2em;
+li p {
+  text-transform: capitalize;
+  font-size: 12px;
+  margin-left: 10px;
 }
 
-.read-the-docs {
-  color: #888;
+li p span {
+  font-size: 9px;
+  font-weight: bold;
+}
+
+.played {
+  text-align: center;
+  color: rgb(227, 125, 53);
+  font-weight: 800;
+}
+
+ul {
+  margin: 0;
 }
