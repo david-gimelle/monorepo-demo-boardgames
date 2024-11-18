@@ -8,6 +8,6 @@ module.exports = {
   },
   moduleNameMapper: {
     '\\.(css|less|scss|sass)$': 'identity-obj-proxy',
-    '\\.(gif|ttf|eot|svg|png)$': 'jest-transform-stub',
+    '\\.(gif|ttf|eot|svg|png|jpg|jpeg)$': 'jest-transform-stub',
   },
 };
