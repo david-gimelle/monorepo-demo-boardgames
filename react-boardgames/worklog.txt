@@ -1,7 +1,0 @@
-TODO list:
-- setup github action with unit tests for all applications
-- check it all works locally
-- update each README
-- update mono repo documentation concept of monorepo and how it apply to this one.
-- deploy it all on AKS
-- add E2E tests with playwright in the pipeline
