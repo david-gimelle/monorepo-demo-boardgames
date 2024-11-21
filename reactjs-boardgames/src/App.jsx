@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './App.css';
 import boardGamesImg from "./assets/bgames.jpg";
+import config from '../config';
 
 export function getInitialBoardGames() {
   return [
@@ -49,9 +50,9 @@ function App() {
   }
 
   
-  const handleNodeAPILoad = () => handleAPILoad('http://127.0.0.1:5001/boardgames', setNodeJsServerError);
-  const handlePythonAPILoad = () => handleAPILoad('http://localhost:3000/boardgames', setPythonServerError);
-  const handleJavaAPILoad = () => handleAPILoad('http://localhost:8082/boardgames', setJavaServerError);
+  const handleNodeAPILoad = () => handleAPILoad(config.nodeApiUrl, setNodeJsServerError);
+  const handlePythonAPILoad = () => handleAPILoad(config.pythonApiUrl, setPythonServerError);
+  const handleJavaAPILoad = () => handleAPILoad(config.javaApiUrl, setJavaServerError);
 
   const handleAPILoad = async (apiUrl, setErrorState) => {
     try {
