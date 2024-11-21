@@ -49,7 +49,7 @@ function App() {
   }
 
   
-  const handleNodeAPILoad = () => handleAPILoad('/node-api/boardgames', setNodeJsServerError);
+  const handleNodeAPILoad = () => handleAPILoad('http://127.0.0.1:5001/boardgames', setNodeJsServerError);
   const handlePythonAPILoad = () => handleAPILoad('http://localhost:3000/boardgames', setPythonServerError);
   const handleJavaAPILoad = () => handleAPILoad('http://localhost:8082/boardgames', setJavaServerError);
 
