@@ -14,6 +14,8 @@ run:
 run:
 > ./gradlew bootRun
 
+Ping the app on http://localhost:8002/ping
+
 Check the app is running on http://localhost:8082/boardgames
 
 # How this application has been created
