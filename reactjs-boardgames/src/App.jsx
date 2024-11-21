@@ -51,7 +51,7 @@ function App() {
   
   const handleNodeAPILoad = () => handleAPILoad('/node-api/boardgames', setNodeJsServerError);
   const handlePythonAPILoad = () => handleAPILoad('/python-api/boardgames', setPythonServerError);
-  const handleJavaAPILoad = () => handleAPILoad('/java-api/boardgames', setJavaServerError);
+  const handleJavaAPILoad = () => handleAPILoad('http://localhost:8082/boardgames', setJavaServerError);
 
   const handleAPILoad = async (apiUrl, setErrorState) => {
     try {
