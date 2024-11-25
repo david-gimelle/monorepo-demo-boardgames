@@ -1,5 +1,6 @@
 TODO list:
 - update mono repo documentation concept of monorepo and how it apply to this one.
+- Add a test all for testing all unit test localy and have this running in the workflow too
 - Add a E2E Test with playwright working locally
 - update  mono repo doc
 - deploy it all on AKS/Terraform/Github Action in test env and prod env
