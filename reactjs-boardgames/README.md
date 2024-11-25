@@ -38,4 +38,8 @@ The react application displays the original datasource of each boardgames and wi
 
 The application has been generate with a vite command
 > npm create vite@latest my-react-app --template
+
+# How to change ports and urls of services
+
+This is configurable from the file config.js
        
