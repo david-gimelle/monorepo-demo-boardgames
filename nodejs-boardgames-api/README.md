@@ -29,3 +29,6 @@ This application use
 Run the unit test with 
 > npm test
 
+# How to change port and url of the react application for cors authorisation
+
+This is configurable from the file config.ts

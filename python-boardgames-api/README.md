@@ -32,4 +32,8 @@ This application uses
 Run the unit tests with 
 > python -m unittest discover tests
 
+# How to change port and url of the react application for cors authorisation
+
+This is configurable from the file config.py
+
 
