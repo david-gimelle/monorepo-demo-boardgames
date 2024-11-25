@@ -1,8 +1,11 @@
 TODO list:
-- Add cors
-- Put all url in parameters
-- check it all works locally
 - update mono repo documentation concept of monorepo and how it apply to this one.
+- Add a test all for testing all unit test localy and have this running in the workflow too
 - Add a E2E Test with playwright working locally
-- deploy it all on AKS
-- add E2E tests with playwright in the pipeline
+- update  mono repo doc
+- deploy it all on AKS/Terraform/Github Action in test env and prod env
+- add smoke tests with playwright in the pipeline for Test env
+- add smoke tests with playwright in the pipeline for Prod env
+- add E2E tests with playwright in the pipeline for Test env
+- add E2E tests with playwright in the pipeline for Prod env
+- update  mono repo doc

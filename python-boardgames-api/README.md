@@ -29,7 +29,7 @@ This application uses
 
 # Run the unit tests
 
-Run the unit test with 
+Run the unit tests with 
 > python -m unittest discover tests
 
 
