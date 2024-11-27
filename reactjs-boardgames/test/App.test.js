@@ -1,5 +1,5 @@
 import React from 'react';
-import App, { getInitialBoardGames } from './App';
+import App, { getInitialBoardGames } from '../src/App';
 
 test('getInitialBoardGames returns the correct initial board games', () => {
   const expectedBoardGames = [

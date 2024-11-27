@@ -41,5 +41,5 @@ The application has been generate with a vite command
 
 # How to change ports and urls of services
 
-This is configurable from the file config.js
+This is configurable from the file config.js. But this will break cors setting and the port must also be changed in every api service for the field cors:allowed-origins
        

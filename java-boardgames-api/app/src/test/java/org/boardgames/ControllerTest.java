@@ -20,6 +20,6 @@ public class ControllerTest {
     public void testGetGames() throws Exception {
         mockMvc.perform(get("/boardgames"))
                 .andExpect(status().isOk())
-                .andExpect(content().json("[{\"name\":\"Azul\",\"origin\":\"java App\",\"played\":false},{\"name\":\"CodeNames\",\"origin\":\"java App\",\"played\":false}]"));
+                .andExpect(content().json("[{\"name\":\"Azul\",\"origin\":\"Java App\",\"played\":false},{\"name\":\"CodeNames\",\"origin\":\"Java App\",\"played\":false}]"));
     }
 }

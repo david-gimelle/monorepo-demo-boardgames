@@ -8,7 +8,8 @@
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "test": "jest"
+    "test": "jest",
+    "test:e2e": "npx playwright install chromium && playwright test"
   },
   "dependencies": {
     "react": "^18.3.1",

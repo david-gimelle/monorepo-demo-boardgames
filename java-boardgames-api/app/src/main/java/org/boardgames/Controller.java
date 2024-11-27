@@ -19,8 +19,8 @@ public class Controller {
     @GetMapping("/boardgames")
     public List<Game> getGames() {
         return Arrays.asList(
-            new Game("Azul", "java App", false),
-            new Game("CodeNames", "java App", false)
+            new Game("Azul", "Java App", false),
+            new Game("CodeNames", "Java App", false)
         );
     }
 }
