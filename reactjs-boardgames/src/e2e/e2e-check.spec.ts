@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test';
-import config from '../config';
+import config from '../../config';
 
 test('React App is up and running', async ({ page }) => {
   await page.goto(`http://localhost:${config.reactJSAppPort}/`);
