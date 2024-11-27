@@ -1,6 +1,7 @@
 TODO list:
 - Add a E2E Test with playwright working locally
 - Refactore unit test in react app to a test folder
+- Add cors setting for the full monorepo
 - update  mono repo doc with some diagrams
 - Add docker images build to each services
 - Deploy it on gks with github action and kubernetes in test env
