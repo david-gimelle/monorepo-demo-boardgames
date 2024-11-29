@@ -1,9 +1,7 @@
 # React Boardgames Lists Demo Application
-
 Simple example of a React Application managing a list of boardgames provided by different apis in Nodejs, Python and Java. It displays detailed error message for each api it's not able to reach.
 
 # Install and Run the application react application
-
 npm is required. 
 Install the app with
 > npm install
@@ -24,8 +22,13 @@ The application call 3 service-apis as boardgames's datasources:
 
 Check the readme of each service to see how to start them.
 
-# How the application connect to the different apis
+# How to run the end 2 end tests localy
+Run the command below to run the end 2 end test with playwright. It will tests the react application and some tests will fails if not all the service api are up and running. 
+> npm run e2e
+To See the chromium browser during the test run this command
+> HEADLESS_TEST=false npm run test:e2e
 
+# How the application connect to the different apis
 The main page of the application with build a list of boardgames using 4 datasources:
 - The react application itself
 - nodejs-boardgames-api
@@ -35,11 +38,9 @@ The main page of the application with build a list of boardgames using 4 datasou
 The react application displays the original datasource of each boardgames and will display a warning for each service api that it's not able to reach.
 
 # How this react application has been generated
-
 The application has been generate with a vite command
 > npm create vite@latest my-react-app --template
 
 # How to change ports and urls of services
-
 This is configurable from the file config.js. But this will break cors setting and the port must also be changed in every api service for the field cors:allowed-origins
        
