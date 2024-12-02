@@ -16,16 +16,14 @@ jobs:
       with:
         python-version: '3.x'
 
+    - name: Install Poetry
+      run: |
+        curl -sSL https://install.python-poetry.org | python3 -
+
     - name: Install dependencies
       run: |
-        python -m venv venv
-        source venv/bin/activate
-        pip install -r requirements.txt
-      working-directory: ./python-boardgames-api
-      
+        poetry install
+
     - name: Run tests
       run: |
-        pip install -r requirements.txt
-        python -m unittest discover tests
-      working-directory: ./python-boardgames-api
-
+        poetry run pytest

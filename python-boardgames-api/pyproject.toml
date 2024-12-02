@@ -1,0 +1,20 @@
+[tool.poetry]
+name = "python-boardgames-api"
+version = "0.1.0"
+description = "A Python/Flask demo api providing a list of boardgames"
+authors = ["david-gimelle"]
+license = "MIT"
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.9"
+flask = "^2.0.1"
+flask-cors = "^3.0.10"
+
+[tool.poetry.dev-dependencies]
+pytest = "^6.2.4"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

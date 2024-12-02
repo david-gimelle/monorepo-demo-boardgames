@@ -1,21 +1,20 @@
 # Python Boardgames Lists Demo Application
 
-Simple example of a Python/Flask Application providing a list of boardgames with a GET endpoint
+Simple example of a Python/Flask/Poetry Api Application providing a list of boardgames with a GET endpoint
 
 # Setup the application localy
-- create a virtual env with these commands
-> python3 -m venv venv
-> source venv/bin/activate
+- Install Poetry
+> pip install poetry
 
-- build the application
-> pip install -r requirements.txt
+- build the application project and its dependencies
+> poetry install
 
 # Run the application
 
-python3 is required.
+python3 and poetry are required.
 
 Run the Application localy with this command and check the url returned
-> python3 main.py
+> poetry run python main.py
 
 Ping the app on http://127.0.0.1:5001/ping
 
@@ -30,7 +29,7 @@ This application uses
 # Run the unit tests
 
 Run the unit tests with 
-> python -m unittest discover tests
+> poetry run pytest
 
 # How to change port and url of the react application for cors authorisation
 

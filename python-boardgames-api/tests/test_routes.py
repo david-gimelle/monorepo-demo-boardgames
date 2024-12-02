@@ -1,23 +1,21 @@
-import unittest
+import pytest
 from app import app
 
-class RoutesTestCase(unittest.TestCase):
-    def setUp(self):
-        self.app = app.test_client()
-        self.app.testing = True
+@pytest.fixture
+def client():
+    with app.test_client() as client:
+        app.testing = True
+        yield client
 
-    def test_ping(self):
-        response = self.app.get('/ping')
-        self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.json, {"message": "pong"})
+def test_ping(client):
+    response = client.get('/ping')
+    assert response.status_code == 200
+    assert response.json == {"message": "pong"}
 
-    def test_get_boardgames(self):
-        response = self.app.get('/boardgames')
-        self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.json, [
-            { "name": "Small World", "origin": "Python App", "played": False },
-            { "name": "Le Havre", "origin": "Python App", "played": False }
-        ])
-
-if __name__ == '__main__':
-    unittest.main()
+def test_get_boardgames(client):
+    response = client.get('/boardgames')
+    assert response.status_code == 200
+    assert response.json == [
+        { "name": "Small World", "origin": "Python App", "played": False },
+        { "name": "Le Havre", "origin": "Python App", "played": False }
+    ]

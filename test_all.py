@@ -1,5 +1,4 @@
 import subprocess
-import os
 
 def run_command(command, cwd=None):
     result = subprocess.run(command, shell=True, cwd=cwd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
@@ -23,8 +22,8 @@ def test_nodejs_project():
 
 def test_python_project():
     print("Running tests for Python project...")
-    run_command("pip install -r requirements.txt", cwd="python-boardgames-api")
-    run_command("python -m unittest discover tests", cwd="python-boardgames-api")
+    run_command("poetry install", cwd="python-boardgames-api")
+    run_command("poetry run pytest", cwd="python-boardgames-api")
 
 def test_java_project():
     print("Running tests for Java project...")
