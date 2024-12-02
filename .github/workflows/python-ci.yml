@@ -2,6 +2,11 @@ name: Python CI
 
 on:
   push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
 
 jobs:
   build:
@@ -19,11 +24,15 @@ jobs:
     - name: Install Poetry
       run: |
         curl -sSL https://install.python-poetry.org | python3 -
+        echo "export PATH=$HOME/.local/bin:$PATH" >> $GITHUB_ENV
+      working-directory: python-boardgames-api
 
     - name: Install dependencies
       run: |
         poetry install
+      working-directory: python-boardgames-api
 
     - name: Run tests
       run: |
         poetry run pytest
+      working-directory: python-boardgames-api
