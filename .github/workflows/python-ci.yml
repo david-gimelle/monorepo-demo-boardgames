@@ -36,3 +36,8 @@ jobs:
       run: |
         poetry run pytest
       working-directory: python-boardgames-api
+
+    - name: Run install-build.py with --skip-build-images
+      run: |
+        python install-build.py --skip-build-images
+      working-directory: python-boardgames-api  
