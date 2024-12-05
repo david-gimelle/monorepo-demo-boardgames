@@ -26,7 +26,7 @@ you can skip the installation of the project and dependency with --skip-install-
 > python install-build.py --skip-install-poetry
 
 you can skip build the image with --skip-poetry
-> python install-build.py --skip-build-image
+> python install-build.py --skip-build-images
 
 # Run the application
 

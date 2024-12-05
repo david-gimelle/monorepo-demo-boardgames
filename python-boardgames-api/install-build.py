@@ -47,7 +47,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Install poetry, run test and Build Docker image")
     parser.add_argument("--skip-tests", action="store_true", help="Skip running tests")
     parser.add_argument("--skip-install-poetry", action="store_true", help="Skip installing Poetry")
-    parser.add_argument("--skip-build-image", action="store_true", help="Skip building Docker image")
+    parser.add_argument("--skip-build-images", action="store_true", help="Skip building Docker image")
     args = parser.parse_args()
 
     poetry_version = "1.1.11"  # Specify the desired Poetry version here
@@ -62,5 +62,5 @@ if __name__ == "__main__":
     if not args.skip_tests:
         run_tests()
 
-    if not args.skip_build_image:
+    if not args.skip_build_images:
         build_docker_image(docker_image_name)    
