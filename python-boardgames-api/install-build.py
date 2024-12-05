@@ -22,9 +22,9 @@ def install_poetry(version):
     print(f"Installing Poetry version {version} with pip...")
     run_command(f"pip install poetry=={version}")
 
-#def verify_poetry_installation():
-#    print("Verifying Poetry installation...")
-#    run_command("poetry --version")
+def verify_poetry_installation():
+    print("Verifying Poetry installation...")
+    run_command("poetry --version")
 
 def delete_lock_file():
     if os.path.exists("poetry.lock"):
@@ -55,7 +55,7 @@ if __name__ == "__main__":
 
     if not args.skip_install_poetry:
         install_poetry(poetry_version)
-        verify_poetry_installation()
+        #verify_poetry_installation()
         delete_lock_file()
         install_dependencies()
 
