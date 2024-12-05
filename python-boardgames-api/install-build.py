@@ -55,9 +55,10 @@ if __name__ == "__main__":
 
     if not args.skip_install_poetry:
         install_poetry(poetry_version)
-        #verify_poetry_installation()
+        verify_poetry_installation()
         delete_lock_file()
-        install_dependencies()
+        
+    install_dependencies()    
 
     if not args.skip_tests:
         run_tests()
