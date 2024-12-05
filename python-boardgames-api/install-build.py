@@ -41,22 +41,26 @@ def run_tests():
 
 def build_docker_image(image_name):
     print(f"Building Docker image {image_name}...")
-    run_command(f"docker build -t {image_name} .")
+    run_command(f"docker build --progress=plain -t {image_name} .")
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="Build Docker image with optional test execution.")
+    parser = argparse.ArgumentParser(description="Install poetry, run test and Build Docker image")
     parser.add_argument("--skip-tests", action="store_true", help="Skip running tests")
+    parser.add_argument("--skip-install-poetry", action="store_true", help="Skip installing Poetry")
+    parser.add_argument("--skip-build-image", action="store_true", help="Skip building Docker image")
     args = parser.parse_args()
 
     poetry_version = "1.1.11"  # Specify the desired Poetry version here
     docker_image_name = "python-boardgames-api"  # Specify the desired Docker image name here
 
-    install_poetry(poetry_version)
-    verify_poetry_installation()
-    delete_lock_file()
-    install_dependencies()
+    if not args.skip_install_poetry:
+        install_poetry(poetry_version)
+        verify_poetry_installation()
+        delete_lock_file()
+        install_dependencies()
 
     if not args.skip_tests:
         run_tests()
 
-    build_docker_image(docker_image_name)
+    if not args.skip_build_image:
+        build_docker_image(docker_image_name)    
