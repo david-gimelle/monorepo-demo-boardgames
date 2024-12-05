@@ -1,10 +1,15 @@
 # Use an official Python runtime as a parent image
 FROM python:3.9-slim
 
+# Install pip and other necessary packages
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    curl \
+    && rm -rf /var/lib/apt/lists/*
+
 # Set environment variables
 ENV POETRY_VERSION=1.1.11
 
-# Install Poetry
+# Install Poetry using pip
 RUN pip install "poetry==$POETRY_VERSION"
 
 # Set the working directory in the container
