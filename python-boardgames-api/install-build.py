@@ -19,8 +19,8 @@ def run_command(command):
         sys.exit(returncode)
 
 def install_poetry(version):
-    print(f"Installing Poetry version {version} with curl...")
-    run_command(f"curl -sSL https://install.python-poetry.org | python3 - --version {version}")
+    print(f"Installing Poetry version {version} with pip...")
+    run_command(f"pip install poetry=={version}")
 
 def verify_poetry_installation():
     print("Verifying Poetry installation...")
