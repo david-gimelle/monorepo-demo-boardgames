@@ -16,11 +16,17 @@ Simple example of a Python/Flask/Poetry Api Application providing a list of boar
 > poetry install
 
 # Install and build an image of the project
-use the script below. This script will ensure poetry 1.1.11 is used to install the project and the image
-> python build.py
+use the script below. This script will ensure poetry 1.1.11 is used to install the project and build an the image
+> python install-build.py
 
 you can skip the tests with --skip-tests
-> python build.py --skip-tests
+> python install-build.py --skip-tests
+
+you can skip the installation of the project and dependency with --skip-install-poetry
+> python install-build.py --skip-install-poetry
+
+you can skip build the image with --skip-poetry
+> python install-build.py --skip-build-images
 
 # Run the application
 
@@ -44,8 +50,12 @@ This is configurable from the file config.py
 
 # Images
 
-Images are build only by github workfkow, you can build one localy with this command
+you can build one localy with this command
 > docker build -t python-boardgames-api .
 > docker build --no-cache --progress=plain -t python-boardgames-api .
+
+You build an image with this script
+> python install-build.py
+> python install-build.py --skip-install-poetry --skip-tests
 
 

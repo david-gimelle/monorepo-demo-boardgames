@@ -2,11 +2,6 @@ name: Python CI
 
 on:
   push:
-    branches:
-      - main
-  pull_request:
-    branches:
-      - main
 
 jobs:
   build:
@@ -36,3 +31,8 @@ jobs:
       run: |
         poetry run pytest
       working-directory: python-boardgames-api
+
+    - name: Run install-build.py with --skip-install-poetry to build image
+      run: |
+        python install-build.py --skip-install-poetry
+      working-directory: python-boardgames-api  
