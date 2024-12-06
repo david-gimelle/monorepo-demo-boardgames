@@ -36,3 +36,15 @@ jobs:
       run: |
         python install-build.py --skip-install-poetry
       working-directory: python-boardgames-api  
+
+    - name: Log in to GitHub Docker registry
+      run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+      working-directory: python-boardgames-api
+
+    - name: Tag Docker image
+      run: docker tag python-boardgames-api ghcr.io/${{ github.repository }}/python-boardgames-api:latest
+      working-directory: python-boardgames-api
+
+    - name: Push Docker image to GitHub Packages
+      run: docker push ghcr.io/${{ github.repository }}/python-boardgames-api:latest
+      working-directory: python-boardgames-api  
