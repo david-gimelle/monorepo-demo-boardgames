@@ -5,6 +5,7 @@ on:
     workflows: ["Python CI"]
     types:
       - completed
+  workflow_dispatch:
 
 jobs:
   create-release:
