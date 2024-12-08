@@ -15,13 +15,21 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v4
 
+    - name: Create Tag
+      id: create_tag
+      run: |
+        TAG_NAME="v$(date +'%Y%m%d%H%M%S')"
+        echo "TAG_NAME=${TAG_NAME}" >> $GITHUB_ENV
+        git tag $TAG_NAME
+        git push origin $TAG_NAME
+
     - name: Create GitHub Release
       if: github.event_name == 'workflow_dispatch' || (github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.head_branch == 'main' && github.event.workflow_run.event == 'pull_request')
       uses: actions/create-release@v1
       with:
-        tag_name: ${{ github.sha }}
-        release_name: Release ${{ github.sha }}
+        tag_name: ${{ env.TAG_NAME }}
+        release_name: Release ${{ env.TAG_NAME }}
         body: |
-          Release notes for ${{ github.sha }}
+          Release notes for ${{ env.TAG_NAME }}
       env:
-        GITHUB_TOKEN: ${{ secrets.GHCR_PAT }}
+        GITHUB_TOKEN: ${{ secrets.GH_PAT }}
