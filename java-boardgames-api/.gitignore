@@ -1,3 +1,5 @@
+/app/bin
+
 # Gradle specific files
 .gradle/
 build/

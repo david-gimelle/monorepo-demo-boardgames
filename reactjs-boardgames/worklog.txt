@@ -1,5 +1,7 @@
 TODO list:
 - update pyhton to poetry and pytest
+- Add python release
+- Reactive all build to check if they still work
 - Deploy the python app on minikube
 - Add docker images build to each services
 - Deploy it on gks with github action and kubernetes in test env
