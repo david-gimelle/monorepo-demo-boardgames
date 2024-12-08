@@ -24,4 +24,4 @@ jobs:
         body: |
           Release notes for ${{ github.sha }}
       env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GITHUB_TOKEN: ${{ secrets.GHCR_PAT }}
