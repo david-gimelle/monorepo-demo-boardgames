@@ -29,6 +29,9 @@ jobs:
         echo "Generated tag name: ${TAG_NAME}"
         echo "TAG_NAME=${TAG_NAME}" >> $GITHUB_ENV
         echo "GH_PAT value: ${GH_PAT}"  # This will be masked in the logs
+        echo "Number of characters in GH_PAT: ${#GH_PAT}"
+        if [[ ${GH_PAT} == ghp* ]]; then echo "GH_PAT token starts with 'ghp'"; else echo "GH_PAT token does not start with 'ghp'"; fi
+        if [[ ${GH_PAT} == *JgF ]]; then echo "GH_PAT token ends with 'JgF'"; else echo "GH_PAT token does not end with 'JgF'"; fi
         echo "Pushing tag to repository: https://x-access-token:${GH_PAT}@github.com/${{ github.repository }}"
         git tag $TAG_NAME
         git push https://x-access-token:${GH_PAT}@github.com/${{ github.repository }} $TAG_NAME
