@@ -22,19 +22,34 @@ jobs:
         git config --global user.email "github-actions[bot]@users.noreply.github.com"
         git config --global user.name "github-actions[bot]"
 
-    - name: Create Tag
+    - name: Increment Version and Create Tag
       id: create_tag
       run: |
-        TAG_NAME="v$(date +'%Y%m%d%H%M%S')"
+        # Read the current version from the VERSION file
+        VERSION=$(cat VERSION)
+        echo "Current version: ${VERSION}"
+
+        # Increment the patch version
+        IFS='.' read -r -a VERSION_PARTS <<< "$VERSION"
+        MAJOR=${VERSION_PARTS[0]}
+        MINOR=${VERSION_PARTS[1]}
+        PATCH=${VERSION_PARTS[2]}
+        NEW_PATCH=$((PATCH + 1))
+        NEW_VERSION="${MAJOR}.${MINOR}.${NEW_PATCH}"
+        echo "New version: ${NEW_VERSION}"
+
+        # Update the VERSION file
+        echo "${NEW_VERSION}" > VERSION
+        git add VERSION
+        git commit -m "Increment version to ${NEW_VERSION}"
+
+        # Create and push the new tag
+        TAG_NAME="v${NEW_VERSION}"
         echo "Generated tag name: ${TAG_NAME}"
         echo "TAG_NAME=${TAG_NAME}" >> $GITHUB_ENV
-        echo "GH_PAT value: ${{ secrets.GH_PAT }}"  # This will be masked in the logs
-        echo "Number of characters in GH_PAT: ${#GH_PAT}"
-        if [[ ${{ secrets.GH_PAT }} == ghp* ]]; then echo "GH_PAT token starts with 'ghp'"; else echo "GH_PAT token does not start with 'ghp'"; fi
-        if [[ ${{ secrets.GH_PAT }} == *JgF ]]; then echo "GH_PAT token ends with 'JgF'"; else echo "GH_PAT token does not end with 'JgF'"; fi
-        echo "Pushing tag to repository"
         git tag $TAG_NAME
         git push origin $TAG_NAME
+        git push origin main
 
     - name: Create GitHub Release
       if: github.event_name == 'workflow_dispatch' || (github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.head_branch == 'main' && github.event.workflow_run.event == 'pull_request')
