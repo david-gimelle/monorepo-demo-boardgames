@@ -15,13 +15,20 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v4
 
+    - name: Set up Git
+      run: |
+        git config --global user.email "github-actions[bot]@users.noreply.github.com"
+        git config --global user.name "github-actions[bot]"
+
     - name: Create Tag
       id: create_tag
+      env:
+        GHCR_PAT: ${{ secrets.GHCR_PAT }}
       run: |
         TAG_NAME="v$(date +'%Y%m%d%H%M%S')"
         echo "TAG_NAME=${TAG_NAME}" >> $GITHUB_ENV
         git tag $TAG_NAME
-        git push origin $TAG_NAME
+        git push https://x-access-token:${GHCR_PAT}@github.com/${{ github.repository }} $TAG_NAME
 
     - name: Create GitHub Release
       if: github.event_name == 'workflow_dispatch' || (github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.head_branch == 'main' && github.event.workflow_run.event == 'pull_request')
@@ -32,4 +39,4 @@ jobs:
         body: |
           Release notes for ${{ env.TAG_NAME }}
       env:
-        GITHUB_TOKEN: ${{ secrets.GH_PAT }}
+        GITHUB_TOKEN: ${{ secrets.GHCR_PAT }}
