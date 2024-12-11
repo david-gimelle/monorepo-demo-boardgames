@@ -45,6 +45,7 @@ jobs:
 
         # Loop to find an unused tag
         while git rev-parse "v${NEW_VERSION}" >/dev/null 2>&1; do
+          echo "Tag v${NEW_VERSION} already exists"
           NEW_PATCH=$((NEW_PATCH + 1))
           NEW_VERSION="${MAJOR}.${MINOR}.${NEW_PATCH}"
         done
