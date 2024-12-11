@@ -26,7 +26,9 @@ jobs:
         GH_PAT: ${{ secrets.GH_PAT }}
       run: |
         TAG_NAME="v$(date +'%Y%m%d%H%M%S')"
+        echo "Generated tag name: ${TAG_NAME}"
         echo "TAG_NAME=${TAG_NAME}" >> $GITHUB_ENV
+        echo "Pushing tag to repository: https://x-access-token:${{ secrets.GH_PAT }}@github.com/${{ github.repository }}"
         git tag $TAG_NAME
         git push https://x-access-token:${{ secrets.GH_PAT }}@github.com/${{ github.repository }} $TAG_NAME
 
