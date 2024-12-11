@@ -28,9 +28,10 @@ jobs:
         TAG_NAME="v$(date +'%Y%m%d%H%M%S')"
         echo "Generated tag name: ${TAG_NAME}"
         echo "TAG_NAME=${TAG_NAME}" >> $GITHUB_ENV
-        echo "Pushing tag to repository: https://x-access-token:${{ secrets.GH_PAT }}@github.com/${{ github.repository }}"
+        echo "GH_PAT value: ${GH_PAT}"  # This will be masked in the logs
+        echo "Pushing tag to repository: https://x-access-token:${GH_PAT}@github.com/${{ github.repository }}"
         git tag $TAG_NAME
-        git push https://x-access-token:${{ secrets.GH_PAT }}@github.com/${{ github.repository }} $TAG_NAME
+        git push https://x-access-token:${GH_PAT}@github.com/${{ github.repository }} $TAG_NAME
 
     - name: Create GitHub Release
       if: github.event_name == 'workflow_dispatch' || (github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.head_branch == 'main' && github.event.workflow_run.event == 'pull_request')
