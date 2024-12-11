@@ -1,4 +1,4 @@
-name: Python Release
+name: Monorepo Release
 
 on:
   workflow_run:
