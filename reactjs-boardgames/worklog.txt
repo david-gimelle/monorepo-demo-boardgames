@@ -1,6 +1,7 @@
 TODO list:
-- update pyhton to poetry and pytest
+- Add monorepo release
 - Add python release
+- Update Doc about Release version
 - Reactive all build to check if they still work
 - Deploy the python app on minikube
 - Add docker images build to each services

@@ -1,0 +1,69 @@
+name: Monorepo Release
+
+on:
+  workflow_run:
+    workflows: ["Python CI"]
+    types:
+      - completed
+  workflow_dispatch:
+    inputs:
+      target_branch:
+        description: 'The branch to run the release on'
+        required: true
+        default: 'main'
+
+jobs:
+  create-release:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      with:
+        token: ${{ secrets.GH_PAT }}
+        ref: ${{ github.event.inputs.target_branch }}
+
+    - name: Set up Git
+      run: |
+        git config --global user.email "github-actions[bot]@users.noreply.github.com"
+        git config --global user.name "github-actions[bot]"
+
+    - name: Increment Version and Create Tag
+      id: create_tag
+      run: |
+        # Read the current version from the VERSION file
+        VERSION=$(cat VERSION)
+        echo "Current version: ${VERSION}"
+
+        # Increment the patch version
+        IFS='.' read -r -a VERSION_PARTS <<< "$VERSION"
+        MAJOR=${VERSION_PARTS[0]}
+        MINOR=${VERSION_PARTS[1]}
+        PATCH=${VERSION_PARTS[2]}
+        NEW_PATCH=$((PATCH + 1))
+        NEW_VERSION="${MAJOR}.${MINOR}.${NEW_PATCH}"
+        echo "New version: ${NEW_VERSION}"
+
+        # Update the VERSION file
+        echo "${NEW_VERSION}" > VERSION
+        git add VERSION
+        git commit -m "Increment version to ${NEW_VERSION}"
+
+        # Create and push the new tag
+        TAG_NAME="v${NEW_VERSION}"
+        echo "Generated tag name: ${TAG_NAME}"
+        echo "TAG_NAME=${TAG_NAME}" >> $GITHUB_ENV
+        git tag $TAG_NAME
+        git push origin $TAG_NAME
+        git push origin ${{ github.event.inputs.target_branch }}
+
+    - name: Create GitHub Release
+      if: github.event.inputs.target_branch == 'main'
+      uses: actions/create-release@v1
+      with:
+        tag_name: ${{ env.TAG_NAME }}
+        release_name: Release ${{ env.TAG_NAME }}
+        body: |
+          Release notes for ${{ env.TAG_NAME }}
+      env:
+        GITHUB_TOKEN: ${{ secrets.GH_PAT }}
