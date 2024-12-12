@@ -11,6 +11,9 @@ on:
         description: 'The branch to run the release on'
         required: true
         default: 'main'
+      new_version:
+        description: 'Override the new version manually'
+        required: false
 
 jobs:
   create-release:
@@ -35,22 +38,20 @@ jobs:
         VERSION=$(cat VERSION)
         echo "Current version: ${VERSION}"
 
-        # Increment the patch version and check for existing tags
-        IFS='.' read -r -a VERSION_PARTS <<< "$VERSION"
-        MAJOR=${VERSION_PARTS[0]}
-        MINOR=${VERSION_PARTS[1]}
-        PATCH=${VERSION_PARTS[2]}
-        NEW_PATCH=$((PATCH + 1))
-        NEW_VERSION="${MAJOR}.${MINOR}.${NEW_PATCH}"
-
-        # Loop to find an unused tag
-        while git rev-parse "v${NEW_VERSION}" >/dev/null 2>&1; do
-          echo "Tag v${NEW_VERSION} already exists"
-          NEW_PATCH=$((NEW_PATCH + 1))
+        # Check if a new version is provided as input
+        if [ -n "${{ github.event.inputs.new_version }}" ]; then
+          NEW_VERSION="${{ github.event.inputs.new_version }}"
+          echo "Overriding with new version: ${NEW_VERSION}"
+        else
+          # Increment the patch version
+          IFS='.' read -r -a VERSION_PARTS <<< "$VERSION"
+          MAJOR=${VERSION_PARTS[0]}
+          MINOR=${VERSION_PARTS[1]}
+          PATCH=${VERSION_PARTS[2]}
+          NEW_PATCH=$((PATCH + 1))
           NEW_VERSION="${MAJOR}.${MINOR}.${NEW_PATCH}"
-        done
-
-        echo "New version: ${NEW_VERSION}"
+          echo "New version: ${NEW_VERSION}"
+        fi
 
         # Update the VERSION file
         echo "${NEW_VERSION}" > VERSION
