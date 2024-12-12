@@ -45,4 +45,5 @@ The application has been generate with a vite command
 This is configurable from the file config.js. But this will break cors setting and the port must also be changed in every api service for the field cors:allowed-origins
        
 # How to release the monorepo
-Release are made only from main, use the realease.yml workflow from the github interface, it will increment the version of the monorepo. This version is stored in VERSION file       
+Release are made only from main, use the realease.yml workflow from the github interface, it will increment the version of the monorepo. This version is stored in VERSION file. 
+Every Thursday morning a new release is made if any changes happend in the last 24h in main branch       
