@@ -1,8 +1,5 @@
 TODO list:
-- Add monorepo release
-- Add python release
-- Update Doc about Release version
-- Reactive all build to check if they still work
+- update doc on release
 - Deploy the python app on minikube
 - Add docker images build to each services
 - Deploy it on gks with github action and kubernetes in test env
