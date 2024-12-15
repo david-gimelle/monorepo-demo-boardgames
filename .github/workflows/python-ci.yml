@@ -55,17 +55,17 @@ jobs:
         poetry run pytest
       working-directory: python-boardgames-api
 
-    - name: Set up Google Cloud SDK
-      uses: google-github-actions/setup-gcloud@v1
-      with:
-        version: 'latest'
-        service_account_key: ${{ secrets.GCP_SA_KEY }}
-        export_default_credentials: true
+    #- name: Set up Google Cloud SDK
+    #  uses: google-github-actions/setup-gcloud@v1
+    #  with:
+    #    version: 'latest'
+    #    service_account_key: ${{ secrets.GCP_SA_KEY }}
+    #    export_default_credentials: true
 
-    - name: Configure kubectl
-      run: |
-        gcloud container clusters get-credentials YOUR_CLUSTER_NAME --zone YOUR_CLUSTER_ZONE --project YOUR_PROJECT_ID
+    #- name: Configure kubectl
+    #  run: |
+    #    gcloud container clusters get-credentials YOUR_CLUSTER_NAME --zone YOUR_CLUSTER_ZONE --project YOUR_PROJECT_ID
 
-    - name: Deploy to GKE
-      run: |
-        kubectl set image deployment/python-boardgames-api python-boardgames-api=ghcr.io/${{ github.repository }}/python-boardgames-api:${{ env.BRANCH_NAME }}
+    #- name: Deploy to GKE
+    #  run: |
+    #    kubectl set image deployment/python-boardgames-api python-boardgames-api=ghcr.io/${{ github.repository }}/python-boardgames-api:${{ env.BRANCH_NAME }}
