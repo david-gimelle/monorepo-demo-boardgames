@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: python-boardgames-api
+  labels:
+    app: python-boardgames-api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: python-boardgames-api
+  template:
+    metadata:
+      labels:
+        app: python-boardgames-api
+    spec:
+      containers:
+      - name: python-boardgames-api
+        image: ghcr.io/your-username/your-repository/python-boardgames-api:latest
+        ports:
+        - containerPort: 80
+        env:
+        - name: ENV_VAR_NAME
+          value: "value"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: python-boardgames-api
+spec:
+  selector:
+    app: python-boardgames-api
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
+  type: LoadBalancer          
