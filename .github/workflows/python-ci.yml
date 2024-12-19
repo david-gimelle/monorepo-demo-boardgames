@@ -46,8 +46,8 @@ jobs:
     - name: Extract branch name
       id: extract_branch
       run: |
-        echo "GITHUB_REF=${GITHUB_REF}"
-        echo "BRANCH_NAME=${GITHUB_REF#refs/heads/}" >> $GITHUB_ENV
+        BRANCH_NAME=$(git rev-parse --abbrev-ref HEAD)
+        echo "BRANCH_NAME=${BRANCH_NAME}" >> $GITHUB_ENV
 
     - name: Display branch name
       run: echo "Branch name is $BRANCH_NAME"
