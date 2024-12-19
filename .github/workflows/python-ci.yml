@@ -94,7 +94,7 @@ jobs:
 
     - name: Apply Kubernetes manifests
       run: |
-        kubectl apply -f manifests/manifest-pythonapp.yml
+        kubectl apply -f manifests/test/manifest-pythonapp.yml
 
     - name: Deploy to GKE
       run: |
