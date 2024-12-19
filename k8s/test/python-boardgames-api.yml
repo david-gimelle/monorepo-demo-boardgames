@@ -2,3 +2,24 @@ apiVersion: v1
 kind: Namespace
 metadata:
   name: python-boardgames-api
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: python-boardgames-api
+  namespace: python-boardgames-api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: python-boardgames-api
+  template:
+    metadata:
+      labels:
+        app: python-boardgames-api
+    spec:
+      containers:
+      - name: python-boardgames-api
+        image: ghcr.io/david-gimelle/monorepo-demo-boardgames/python-boardgames-api:latest
+        ports:
+        - containerPort: 80
