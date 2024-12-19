@@ -92,6 +92,15 @@ jobs:
       run: |
         gcloud container clusters get-credentials ${{ env.GKE_CLUSTER_NAME }} --zone ${{ env.GKE_CLUSTER_ZONE }} --project ${{ env.GCP_PROJECT_ID }}
 
+    - name: Create Docker registry secret
+      run: |
+        kubectl create secret docker-registry ghcr-secret \
+          --docker-server=ghcr.io \
+          --docker-username=${{ github.actor }} \
+          --docker-password=${{ secrets.GHCR_PAT }} \
+          --docker-email=${{ github.actor }}@users.noreply.github.com \
+          --namespace=${{ env.K8S_NAMESPACE }}
+
     - name: Apply Kubernetes manifests
       run: |
         kubectl apply -f k8s/test/python-boardgames-api.yml
@@ -99,3 +108,7 @@ jobs:
     - name: Deploy to GKE
       run: |
         kubectl set image deployment/python-boardgames-api python-boardgames-api=ghcr.io/${{ github.repository }}/python-boardgames-api:${{ env.BRANCH_NAME }} --namespace ${{ env.K8S_NAMESPACE }}
+
+    - name: Check Deployment Status
+      run: |
+        kubectl rollout status deployment/python-boardgames-api --namespace ${{ env.K8S_NAMESPACE }}

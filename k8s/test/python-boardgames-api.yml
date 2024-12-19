@@ -20,6 +20,8 @@ spec:
     spec:
       containers:
       - name: python-boardgames-api
-        image: ghcr.io/david-gimelle/monorepo-demo-boardgames/python-boardgames-api:latest
+        image: ghcr.io/david-gimelle/monorepo-demo-boardgames/python-boardgames-api:placeholder
         ports:
         - containerPort: 80
+      imagePullSecrets:
+      - name: ghcr-secret
