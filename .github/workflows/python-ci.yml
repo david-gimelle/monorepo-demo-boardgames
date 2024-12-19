@@ -92,6 +92,10 @@ jobs:
       run: |
         gcloud container clusters get-credentials ${{ env.GKE_CLUSTER_NAME }} --zone ${{ env.GKE_CLUSTER_ZONE }} --project ${{ env.GCP_PROJECT_ID }}
 
+    - name: Apply Kubernetes manifests
+      run: |
+        kubectl apply -f manifests/manifest-pythonapp.yml
+
     - name: Deploy to GKE
       run: |
         kubectl set image deployment/python-boardgames-api python-boardgames-api=ghcr.io/${{ github.repository }}/python-boardgames-api:${{ env.BRANCH_NAME }} --namespace ${{ env.K8S_NAMESPACE }}
