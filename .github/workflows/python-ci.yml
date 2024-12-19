@@ -10,35 +10,11 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
-    steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
-
-    - name: Set up Python
-      uses: actions/setup-python@v4 
-      with:
-        python-version: '3.x'
-
-    - name: Install Poetry
-      run: |
-        curl -sSL https://install.python-poetry.org | python3 -
-        echo "export PATH=$HOME/.local/bin:$PATH" >> $GITHUB_ENV
-      working-directory: python-boardgames-api
-
-    - name: Install dependencies
-      run: |
-        poetry install
-      working-directory: python-boardgames-api
-
-    - name: Run tests
-      run: |
-        poetry run pytest
-      working-directory: python-boardgames-api
-
-  build-and-publish:
-    runs-on: ubuntu-latest
-    needs: build
-    if: github.event_name == 'pull_request'
+    env:
+      GKE_CLUSTER_NAME: ${{ vars.GKE_CLUSTER_NAME }}
+      GKE_CLUSTER_ZONE: ${{ vars.GKE_CLUSTER_ZONE }}
+      GCP_PROJECT_ID: ${{ vars.GCP_PROJECT_ID }}
+      K8S_NAMESPACE: python-boardgames-api
 
     steps:
     - name: Checkout code
@@ -68,8 +44,71 @@ jobs:
     - name: Log in to GitHub Docker registry
       run: echo "${{ secrets.GHCR_PAT }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
 
+    - name: Extract branch name
+      id: extract_branch
+      run: |
+        BRANCH_NAME=$(git rev-parse --abbrev-ref HEAD)
+        echo "BRANCH_NAME=${BRANCH_NAME}" >> $GITHUB_ENV
+
+    - name: Display branch name
+      run: echo "Branch name is $BRANCH_NAME"
+
     - name: Tag Docker image
-      run: docker tag python-boardgames-api ghcr.io/${{ github.repository }}/python-boardgames-api:latest
+      run: |
+        docker tag python-boardgames-api ghcr.io/${{ github.repository }}/python-boardgames-api:${{ env.BRANCH_NAME }}
 
     - name: Push Docker image to GitHub Packages
-      run: docker push ghcr.io/${{ github.repository }}/python-boardgames-api:latest
+      run: |
+        docker push ghcr.io/${{ github.repository }}/python-boardgames-api:${{ env.BRANCH_NAME }}
+
+    # - name: Run tests
+    #   run: |
+    #     poetry run pytest
+    #   working-directory: python-boardgames-api
+
+    - name: Set up Google Cloud SDK
+      uses: google-github-actions/setup-gcloud@v1
+      with:
+        version: 'latest'
+
+    - name: Authenticate to Google Cloud
+      uses: google-github-actions/auth@v1
+      with:
+        credentials_json: ${{ secrets.GCP_SA_KEY }}
+
+    - name: Add Google Cloud SDK repository
+      run: |
+        echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] http://packages.cloud.google.com/apt cloud-sdk main" | sudo tee -a /etc/apt/sources.list.d/google-cloud-sdk.list
+        curl -sSL https://packages.cloud.google.com/apt/doc/apt-key.gpg | gpg --dearmor | sudo tee /usr/share/keyrings/cloud.google.gpg > /dev/null
+        sudo apt-get update
+
+    - name: Install gke-gcloud-auth-plugin
+      run: |
+        sudo apt-get install -y google-cloud-sdk-gke-gcloud-auth-plugin
+
+    - name: Configure kubectl
+      env:
+        USE_GKE_GCLOUD_AUTH_PLUGIN: "True"
+      run: |
+        gcloud container clusters get-credentials ${{ env.GKE_CLUSTER_NAME }} --zone ${{ env.GKE_CLUSTER_ZONE }} --project ${{ env.GCP_PROJECT_ID }}
+
+    - name: Create Docker registry secret
+      run: |
+        kubectl create secret docker-registry ghcr-secret \
+          --docker-server=ghcr.io \
+          --docker-username=${{ github.actor }} \
+          --docker-password=${{ secrets.GHCR_PAT }} \
+          --docker-email=${{ github.actor }}@users.noreply.github.com \
+          --namespace=${{ env.K8S_NAMESPACE }}
+
+    - name: Apply Kubernetes manifests
+      run: |
+        kubectl apply -f k8s/test/python-boardgames-api.yml
+
+    - name: Deploy to GKE
+      run: |
+        kubectl set image deployment/python-boardgames-api python-boardgames-api=ghcr.io/${{ github.repository }}/python-boardgames-api:${{ env.BRANCH_NAME }} --namespace ${{ env.K8S_NAMESPACE }}
+
+    - name: Check Deployment Status
+      run: |
+        kubectl rollout status deployment/python-boardgames-api --namespace ${{ env.K8S_NAMESPACE }}
