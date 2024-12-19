@@ -60,10 +60,10 @@ jobs:
       run: |
         docker push ghcr.io/${{ github.repository }}/python-boardgames-api:${{ env.BRANCH_NAME }}
 
-    #- name: Run tests
-    #  run: |
-    #    poetry run pytest
-    #  working-directory: python-boardgames-api
+    # - name: Run tests
+    #   run: |
+    #     poetry run pytest
+    #   working-directory: python-boardgames-api
 
     - name: Set up Google Cloud SDK
       uses: google-github-actions/setup-gcloud@v1
@@ -75,9 +75,14 @@ jobs:
       with:
         credentials_json: ${{ secrets.GCP_SA_KEY }}
 
+    - name: Add Google Cloud SDK repository
+      run: |
+        echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] http://packages.cloud.google.com/apt cloud-sdk main" | sudo tee -a /etc/apt/sources.list.d/google-cloud-sdk.list
+        curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -
+        sudo apt-get update
+
     - name: Install gke-gcloud-auth-plugin
       run: |
-        sudo apt-get update
         sudo apt-get install -y google-cloud-sdk-gke-gcloud-auth-plugin
 
     - name: Configure kubectl
