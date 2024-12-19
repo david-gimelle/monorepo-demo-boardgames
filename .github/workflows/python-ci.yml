@@ -47,6 +47,9 @@ jobs:
       id: extract_branch
       run: echo "BRANCH_NAME=${GITHUB_REF#refs/heads/}" >> $GITHUB_ENV
 
+    - name: Display branch name
+      run: echo "Branch name is $BRANCH_NAME"      
+
     - name: Tag Docker image
       run: |
         docker tag python-boardgames-api ghcr.io/${{ github.repository }}/python-boardgames-api:${{ env.BRANCH_NAME }}
