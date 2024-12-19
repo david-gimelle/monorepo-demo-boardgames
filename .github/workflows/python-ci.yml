@@ -14,6 +14,7 @@ jobs:
       GKE_CLUSTER_NAME: ${{ vars.GKE_CLUSTER_NAME }}
       GKE_CLUSTER_ZONE: ${{ vars.GKE_CLUSTER_ZONE }}
       GCP_PROJECT_ID: ${{ vars.GCP_PROJECT_ID }}
+      K8S_NAMESPACE: python-boardgames-api
 
     steps:
     - name: Checkout code
@@ -93,4 +94,4 @@ jobs:
 
     - name: Deploy to GKE
       run: |
-        kubectl set image deployment/python-boardgames-api python-boardgames-api=ghcr.io/${{ github.repository }}/python-boardgames-api:${{ env.BRANCH_NAME }}
+        kubectl set image deployment/python-boardgames-api python-boardgames-api=ghcr.io/${{ github.repository }}/python-boardgames-api:${{ env.BRANCH_NAME }} --namespace ${{ env.K8S_NAMESPACE }}
