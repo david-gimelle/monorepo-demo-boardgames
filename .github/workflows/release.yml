@@ -2,7 +2,7 @@ name: Release
 
 on:
   schedule:
-    - cron: '45 8 * * *'  # Runs every Thursday morning UTC
+    - cron: '20 10 * * *'  # Runs every Thursday morning UTC
   workflow_dispatch:
     inputs:
       target_branch:
