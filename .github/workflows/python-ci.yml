@@ -94,7 +94,7 @@ jobs:
 
     - name: Apply Kubernetes manifests
       run: |
-        kubectl apply -f manifests/test/manifest-pythonapp.yml
+        kubectl apply -f k8s/test/python-boardgames-api.yml
 
     - name: Deploy to GKE
       run: |
