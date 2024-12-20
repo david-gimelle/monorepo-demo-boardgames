@@ -76,16 +76,6 @@ jobs:
       with:
         credentials_json: ${{ secrets.GCP_SA_KEY }}
 
-    - name: Add Google Cloud SDK repository
-      run: |
-        echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] http://packages.cloud.google.com/apt cloud-sdk main" | sudo tee -a /etc/apt/sources.list.d/google-cloud-sdk.list
-        curl -sSL https://packages.cloud.google.com/apt/doc/apt-key.gpg | gpg --dearmor | sudo tee /usr/share/keyrings/cloud.google.gpg > /dev/null
-        sudo apt-get update
-
-    - name: Install gke-gcloud-auth-plugin
-      run: |
-        sudo apt-get install -y google-cloud-sdk-gke-gcloud-auth-plugin
-
     - name: Configure kubectl
       env:
         USE_GKE_GCLOUD_AUTH_PLUGIN: "True"
@@ -118,3 +108,7 @@ jobs:
     - name: Check Deployment Status
       run: |
         kubectl rollout status deployment/python-boardgames-api --namespace ${{ env.K8S_NAMESPACE }}
+
+    - name: Get Services
+      run: |
+        kubectl get services --namespace=${{ env.K8S_NAMESPACE }}
