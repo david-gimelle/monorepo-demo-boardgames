@@ -92,7 +92,13 @@ jobs:
       run: |
         gcloud container clusters get-credentials ${{ env.GKE_CLUSTER_NAME }} --zone ${{ env.GKE_CLUSTER_ZONE }} --project ${{ env.GCP_PROJECT_ID }}
 
+    - name: Check if Docker registry secret exists
+      id: check_secret
+      run: |
+        kubectl get secret ghcr-secret --namespace=${{ env.K8S_NAMESPACE }} || echo "Secret does not exist"
+
     - name: Create Docker registry secret
+      if: steps.check_secret.outputs.secret_exists == 'false'
       run: |
         kubectl create secret docker-registry ghcr-secret \
           --docker-server=ghcr.io \
