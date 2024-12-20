@@ -15,3 +15,7 @@ def pinging():
 def get_boardgames():
     boardgames = get_boardgames_list()
     return jsonify(boardgames), 200
+
+@app.route('/health', methods=['GET'])
+def health():
+    return jsonify({"status": "healthy"}), 200

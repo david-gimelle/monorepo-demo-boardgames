@@ -25,3 +25,17 @@ spec:
         - containerPort: 80
       imagePullSecrets:
       - name: ghcr-secret
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: python-boardgames-api-service
+  namespace: python-boardgames-api
+spec:
+  type: LoadBalancer
+  selector:
+    app: python-boardgames-api
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
