@@ -5,6 +5,5 @@ from flask_cors import CORS
 # Enable CORS for the entire application
 CORS(app, origins=[Config.corsAllowedOrigin])
 
-if __name__ == '__main__':
-    port = getattr(Config, "PORT", 5000)
-    app.run(debug=True, port=port)
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=5001)
