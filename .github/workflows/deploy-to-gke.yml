@@ -1,10 +1,8 @@
 name: Deploy to GKE
 
+#To Delete
 on:
-  workflow_run:
-    workflows: ["Build and Push Docker Image"]
-    types:
-      - completed
+  workflow_dispatch:
 
 jobs:
   deploy:
@@ -17,6 +15,9 @@ jobs:
       K8S_NAMESPACE: python-boardgames-api
 
     steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
     - name: Set up Google Cloud SDK
       uses: google-github-actions/setup-gcloud@v1
       with:
@@ -58,7 +59,7 @@ jobs:
 
     - name: Deploy to GKE
       run: |
-        kubectl set image deployment/python-boardgames-api python-boardgames-api=ghcr.io/${{ github.repository }}/python-boardgames-api:${{ github.event.inputs.branch }} --namespace ${{ env.K8S_NAMESPACE }}
+        kubectl set image deployment/python-boardgames-api python-boardgames-api=ghcr.io/${{ github.repository }}/python-boardgames-api:${{ github.event.workflow_run.head_branch }} --namespace ${{ env.K8S_NAMESPACE }}
 
     - name: Check Deployment Status
       run: |
