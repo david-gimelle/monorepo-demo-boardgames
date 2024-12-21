@@ -76,3 +76,4 @@ jobs:
       run: |
         EXTERNAL_IP=$(kubectl get service python-boardgames-api-service --namespace=${{ env.K8S_NAMESPACE }} -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
         curl --fail http://$EXTERNAL_IP:8282/health
+        
