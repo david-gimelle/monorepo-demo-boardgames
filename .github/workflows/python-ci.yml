@@ -54,11 +54,11 @@ jobs:
     - name: Extract branch name
       id: extract_branch
       run: |
-        BRANCH_NAME=$(git rev-parse --abbrev-ref HEAD)
+        BRANCH_NAME=${{ github.ref_name }}
         echo "BRANCH_NAME=${BRANCH_NAME}" >> $GITHUB_ENV
 
     - name: Display branch name
-      run: echo "Branch name is $BRANCH_NAME"
+      run: echo "Branch name is ${{ env.BRANCH_NAME }}"
 
     - name: Tag Docker image
       run: |
