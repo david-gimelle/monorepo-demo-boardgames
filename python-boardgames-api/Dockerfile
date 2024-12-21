@@ -1,10 +1,10 @@
 # Use an official Python runtime as a parent image
-FROM python:3.9-slim
+FROM python:3.9-alpine
 
 # Install pip and other necessary packages
-RUN apt-get update && apt-get install -y --no-install-recommends \
+RUN apk add --no-cache \
     curl \
-    && rm -rf /var/lib/apt/lists/*
+    && pip install --upgrade pip
 
 # Set environment variables
 ENV POETRY_VERSION=1.1.11

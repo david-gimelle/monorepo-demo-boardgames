@@ -1,4 +1,4 @@
-name: Python CI
+name: Build and Push Docker Image
 
 on:
   pull_request:
@@ -30,46 +30,32 @@ jobs:
         poetry install
       working-directory: python-boardgames-api
 
-    - name: Run tests
-      run: |
-        poetry run pytest
-      working-directory: python-boardgames-api
-
-  build-and-publish:
-    runs-on: ubuntu-latest
-    needs: build
-    if: github.event_name == 'pull_request'
-
-    steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
-
-    - name: Set up Python
-      uses: actions/setup-python@v4 
-      with:
-        python-version: '3.x'
-
-    - name: Install Poetry
-      run: |
-        curl -sSL https://install.python-poetry.org | python3 -
-        echo "export PATH=$HOME/.local/bin:$PATH" >> $GITHUB_ENV
-      working-directory: python-boardgames-api
-
-    - name: Install dependencies
-      run: |
-        poetry install
-      working-directory: python-boardgames-api
-
     - name: Run install-build.py with --skip-install-poetry to build image
       run: |
         python install-build.py --skip-install-poetry
-      working-directory: python-boardgames-api  
+      working-directory: python-boardgames-api
+      
+    - name: Run tests
+      run: |
+        poetry run pytest
+      working-directory: python-boardgames-api   
 
     - name: Log in to GitHub Docker registry
       run: echo "${{ secrets.GHCR_PAT }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
 
+    - name: Extract branch name
+      id: extract_branch
+      run: |
+        BRANCH_NAME=$(git rev-parse --abbrev-ref HEAD)
+        echo "BRANCH_NAME=${BRANCH_NAME}" >> $GITHUB_ENV
+
+    - name: Display branch name
+      run: echo "Branch name is $BRANCH_NAME"
+
     - name: Tag Docker image
-      run: docker tag python-boardgames-api ghcr.io/${{ github.repository }}/python-boardgames-api:latest
+      run: |
+        docker tag python-boardgames-api ghcr.io/${{ github.repository }}/python-boardgames-api:${{ env.BRANCH_NAME }}
 
     - name: Push Docker image to GitHub Packages
-      run: docker push ghcr.io/${{ github.repository }}/python-boardgames-api:latest
+      run: |
+        docker push ghcr.io/${{ github.repository }}/python-boardgames-api:${{ env.BRANCH_NAME }}
