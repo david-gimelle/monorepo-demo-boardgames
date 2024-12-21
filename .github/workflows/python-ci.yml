@@ -76,6 +76,10 @@ jobs:
       with:
         credentials_json: ${{ secrets.GCP_SA_KEY }}
 
+    - name: Install gke-gcloud-auth-plugin
+      run: |
+        gcloud components install gke-gcloud-auth-plugin
+
     - name: Configure kubectl
       env:
         USE_GKE_GCLOUD_AUTH_PLUGIN: "True"
