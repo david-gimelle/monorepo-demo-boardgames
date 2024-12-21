@@ -40,5 +40,5 @@ spec:
     app: python-boardgames-api
   ports:
     - protocol: TCP
-      port: 80
+      port: 8282
       targetPort: 5001
