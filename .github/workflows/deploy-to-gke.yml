@@ -17,6 +17,9 @@ jobs:
       K8S_NAMESPACE: python-boardgames-api
 
     steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
     - name: Set up Google Cloud SDK
       uses: google-github-actions/setup-gcloud@v1
       with:
@@ -58,7 +61,7 @@ jobs:
 
     - name: Deploy to GKE
       run: |
-        kubectl set image deployment/python-boardgames-api python-boardgames-api=ghcr.io/${{ github.repository }}/python-boardgames-api:${{ github.event.inputs.branch }} --namespace ${{ env.K8S_NAMESPACE }}
+        kubectl set image deployment/python-boardgames-api python-boardgames-api=ghcr.io/${{ github.repository }}/python-boardgames-api:${{ github.event.workflow_run.head_branch }} --namespace ${{ env.K8S_NAMESPACE }}
 
     - name: Check Deployment Status
       run: |
@@ -76,4 +79,3 @@ jobs:
       run: |
         EXTERNAL_IP=$(kubectl get service python-boardgames-api-service --namespace=${{ env.K8S_NAMESPACE }} -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
         curl --fail http://$EXTERNAL_IP:8282/health
-        
