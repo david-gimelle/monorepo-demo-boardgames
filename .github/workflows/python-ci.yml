@@ -1,4 +1,4 @@
-name: Pyhton ci Build and Push Docker Image
+name: Build and Push Docker Image
 
 on:
   pull_request:
@@ -59,17 +59,3 @@ jobs:
     - name: Push Docker image to GitHub Packages
       run: |
         docker push ghcr.io/${{ github.repository }}/python-boardgames-api:${{ env.BRANCH_NAME }}
-
-    - name: Trigger Deploy Workflow
-      uses: actions/github-script@v4
-      with:
-          script: |
-            github.rest.actions.createWorkflowDispatch({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              workflow_id: 'deploy-to-gke.yml',
-              ref: context.ref,
-              inputs: {
-                branch: '${{ env.BRANCH_NAME }}'
-              }
-            })     
