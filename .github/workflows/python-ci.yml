@@ -130,6 +130,9 @@ jobs:
       run: |
         kubectl apply -f k8s/test/python-boardgames-api.yml
 
+    - name: Display full image name
+      run: echo "Full image name: ghcr.io/${{ github.repository }}/python-boardgames-api:${{ env.BRANCH_NAME }}"
+
     - name: Deploy to GKE
       run: |
         kubectl set image deployment/python-boardgames-api python-boardgames-api=ghcr.io/${{ github.repository }}/python-boardgames-api:${{ env.BRANCH_NAME }} --namespace ${{ env.K8S_NAMESPACE }}
