@@ -40,7 +40,7 @@ jobs:
         poetry run pytest
       working-directory: python-boardgames-api
 
-  push:
+  build-image-push:
     runs-on: ubuntu-latest
     needs: build
 
@@ -64,6 +64,11 @@ jobs:
     - name: Display branch name
       run: echo "Branch name is ${{ env.BRANCH_NAME }}"
 
+    - name: Build Docker image
+      run: |
+        docker build -t python-boardgames-api:${{ env.BRANCH_NAME }} .
+      working-directory: python-boardgames-api  
+
     - name: Tag Docker image
       run: |
         docker tag python-boardgames-api:${{ env.BRANCH_NAME }} ghcr.io/${{ github.repository }}/python-boardgames-api:${{ env.BRANCH_NAME }}
@@ -74,7 +79,7 @@ jobs:
 
   deploy:
     runs-on: ubuntu-latest
-    needs: push
+    needs: build-image-push
 
     env:
       GKE_CLUSTER_NAME: ${{ vars.GKE_CLUSTER_NAME }}
