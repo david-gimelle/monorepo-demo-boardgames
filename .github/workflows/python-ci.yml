@@ -1,4 +1,4 @@
-name: Python CI
+name: Pyhton ci Build and Push Docker Image
 
 on:
   pull_request:
@@ -9,12 +9,6 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-
-    env:
-      GKE_CLUSTER_NAME: ${{ vars.GKE_CLUSTER_NAME }}
-      GKE_CLUSTER_ZONE: ${{ vars.GKE_CLUSTER_ZONE }}
-      GCP_PROJECT_ID: ${{ vars.GCP_PROJECT_ID }}
-      K8S_NAMESPACE: python-boardgames-api
 
     steps:
     - name: Checkout code
@@ -39,7 +33,12 @@ jobs:
     - name: Run install-build.py with --skip-install-poetry to build image
       run: |
         python install-build.py --skip-install-poetry
-      working-directory: python-boardgames-api  
+      working-directory: python-boardgames-api
+      
+    - name: Run tests
+      run: |
+        poetry run pytest
+      working-directory: python-boardgames-api   
 
     - name: Log in to GitHub Docker registry
       run: echo "${{ secrets.GHCR_PAT }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
@@ -61,68 +60,16 @@ jobs:
       run: |
         docker push ghcr.io/${{ github.repository }}/python-boardgames-api:${{ env.BRANCH_NAME }}
 
-    # - name: Run tests
-    #   run: |
-    #     poetry run pytest
-    #   working-directory: python-boardgames-api
-
-    - name: Set up Google Cloud SDK
-      uses: google-github-actions/setup-gcloud@v1
+    - name: Trigger Deploy Workflow
+      uses: actions/github-script@v4
       with:
-        version: 'latest'
-
-    - name: Authenticate to Google Cloud
-      uses: google-github-actions/auth@v1
-      with:
-        credentials_json: ${{ secrets.GCP_SA_KEY }}
-
-    - name: Install gke-gcloud-auth-plugin
-      run: |
-        gcloud components install gke-gcloud-auth-plugin
-
-    - name: Configure kubectl
-      env:
-        USE_GKE_GCLOUD_AUTH_PLUGIN: "True"
-      run: |
-        gcloud container clusters get-credentials ${{ env.GKE_CLUSTER_NAME }} --zone ${{ env.GKE_CLUSTER_ZONE }} --project ${{ env.GCP_PROJECT_ID }}
-
-    - name: Check if Docker registry secret exists
-      id: check_secret
-      run: |
-        kubectl get secret ghcr-secret --namespace=${{ env.K8S_NAMESPACE }} || echo "Secret does not exist"
-
-    - name: Create Docker registry secret
-      if: steps.check_secret.outputs.secret_exists == 'false'
-      run: |
-        kubectl create secret docker-registry ghcr-secret \
-          --docker-server=ghcr.io \
-          --docker-username=${{ github.actor }} \
-          --docker-password=${{ secrets.GHCR_PAT }} \
-          --docker-email=${{ github.actor }}@users.noreply.github.com \
-          --namespace=${{ env.K8S_NAMESPACE }}
-
-    - name: Apply Kubernetes manifests
-      run: |
-        kubectl apply -f k8s/test/python-boardgames-api.yml
-
-    - name: Deploy to GKE
-      run: |
-        kubectl set image deployment/python-boardgames-api python-boardgames-api=ghcr.io/${{ github.repository }}/python-boardgames-api:${{ env.BRANCH_NAME }} --namespace ${{ env.K8S_NAMESPACE }}
-
-    - name: Check Deployment Status
-      run: |
-        kubectl rollout status deployment/python-boardgames-api --namespace ${{ env.K8S_NAMESPACE }}
-
-    - name: Get Services
-      run: |
-        kubectl get services --namespace=${{ env.K8S_NAMESPACE }}
-
-    - name: Wait for Service to be Ready
-      run: |
-        sleep 10
-
-    - name: Check Health Endpoint
-      run: |
-        EXTERNAL_IP=$(kubectl get service python-boardgames-api-service --namespace=${{ env.K8S_NAMESPACE }} -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
-        curl --fail http://$EXTERNAL_IP:8282/health
-        
+          script: |
+            github.rest.actions.createWorkflowDispatch({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              workflow_id: 'deploy-to-gke.yml',
+              ref: context.ref,
+              inputs: {
+                branch: '${{ env.BRANCH_NAME }}'
+              }
+            })     
