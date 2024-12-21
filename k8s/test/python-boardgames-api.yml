@@ -22,7 +22,10 @@ spec:
       - name: python-boardgames-api
         image: ghcr.io/david-gimelle/monorepo-demo-boardgames/python-boardgames-api:placeholder
         ports:
-        - containerPort: 80
+        - containerPort: 5001
+        env:
+        - name: POETRY_VERSION
+          value: "1.1.11"
       imagePullSecrets:
       - name: ghcr-secret
 ---
@@ -38,4 +41,4 @@ spec:
   ports:
     - protocol: TCP
       port: 80
-      targetPort: 80
+      targetPort: 5001
