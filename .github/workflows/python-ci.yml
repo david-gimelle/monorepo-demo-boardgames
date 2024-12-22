@@ -7,12 +7,14 @@ on:
   workflow_dispatch:
 
 env:
-  BRANCH_NAME: ''
   K8S_NAMESPACE: python-boardgames-api
 
 jobs:
   build:
     runs-on: ubuntu-latest
+
+    env:
+      BRANCH_NAME: ''
 
     steps:
     - name: Checkout code
@@ -75,7 +77,7 @@ jobs:
 
     - name: Display branch name
       run: echo "Branch name is ${{ env.BRANCH_NAME }}" |
-        echo "BrancK8S_NAMESPACEh name is ${{ env.K8S_NAMESPACE }}"
+        echo "K8S_NAMESPACE name is ${{ env.K8S_NAMESPACE }}"
 
     - name: Build Docker image
       run: |
