@@ -21,13 +21,13 @@ jobs:
       uses: actions/checkout@v4
 
     - name: Call reusable workflow to extract branch name
-      uses: ./.github/workflows/extract-branch-name.yml@main
+      uses: ./.github/workflows/extract-branch-name.yml
 
     - name: Set branch name from reusable workflow
       run: echo "BRANCH_NAME=${{ needs.extract-branch-name.outputs.branch_name }}" >> $GITHUB_ENV
 
     - name: Display branch name from reusable workflow
-      run: echo "Branch name from is ${{ env.BRANCH_NAME }}"   
+      run: echo "Branch name is ${{ env.BRANCH_NAME }}"  
 
  
 
