@@ -66,7 +66,7 @@ jobs:
     needs: build
 
     env:
-      BRANCH_NAME: ${{ needs.build.outputs.branch_name }}
+      BRANCH_NAME: ${{ needs.build.outputs.extract_branch.branch_name }}
 
     steps:
     - name: Checkout code
@@ -77,7 +77,7 @@ jobs:
 
     - name: Display branch name
       run: echo "Branch name is ${{ env.BRANCH_NAME }}" 
-      
+
     - name: Build Docker image
       run: |
         docker build -t python-boardgames-api:${{ env.BRANCH_NAME }} .
