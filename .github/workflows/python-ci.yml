@@ -76,9 +76,8 @@ jobs:
       run: echo "${{ secrets.GHCR_PAT }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
 
     - name: Display branch name
-      run: echo "Branch name is ${{ env.BRANCH_NAME }}" |
-        echo "K8S_NAMESPACE name is ${{ env.K8S_NAMESPACE }}"
-
+      run: echo "Branch name is ${{ env.BRANCH_NAME }}" 
+      
     - name: Build Docker image
       run: |
         docker build -t python-boardgames-api:${{ env.BRANCH_NAME }} .
