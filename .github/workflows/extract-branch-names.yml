@@ -1,0 +1,27 @@
+name: Extract Branch Name
+
+on:
+  workflow_call:
+    outputs:
+      branch_name:
+        description: 'The name of the branch'
+        value: ${{ steps.extract_branch.outputs.branch_name }}
+
+jobs:
+  extract-branch-name:
+    runs-on: ubuntu-latest
+
+    outputs:
+      branch_name: ${{ steps.extract_branch.outputs.branch_name }}
+
+    steps:
+    - name: Extract branch name
+      id: extract_branch
+      run: |
+        if [ "${{ github.event_name }}" == "pull_request" ]; then
+          echo "BRANCH_NAME=${{ github.head_ref }}" >> $GITHUB_ENV
+          echo "::set-output name=branch_name::${{ github.head_ref }}"
+        else
+          echo "BRANCH_NAME=${{ github.ref_name }}" >> $GITHUB_ENV
+          echo "::set-output name=branch_name::${{ github.ref_name }}"
+        fi

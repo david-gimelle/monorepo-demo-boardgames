@@ -20,6 +20,15 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v4
 
+    - name: Call reusable workflow to extract branch name
+      uses: ./.github/workflows/extract-branch-name.yml
+
+    - name: Set branch name from
+      run: echo "BRANCH_NAME=${{ needs.extract-branch-name.outputs.branch_name }}" >> $GITHUB_ENV
+
+    - name: Display branch name from
+      run: echo "Branch name from is ${{ env.BRANCH_NAME }}"   
+
     - name: Set up Python
       uses: actions/setup-python@v4 
       with:
