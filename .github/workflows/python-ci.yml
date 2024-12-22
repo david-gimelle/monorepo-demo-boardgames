@@ -176,11 +176,6 @@ jobs:
       run: |
         kubectl rollout status deployment/python-boardgames-api --namespace ${{ env.K8S_NAMESPACE }}
 
-  deployment-check:
-    runs-on: ubuntu-latest
-    needs: deploy
-
-    steps:
     - name: Wait for Service to be Ready
       run: |
         sleep 10
