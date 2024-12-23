@@ -1,4 +1,4 @@
-# monorepo-demo-gamesboards
+# monorepo-demo-boardgames
 If you ever wonder how a monorepo works. Check this one that has 4 applications in 4 differents programming languages: React javascript, Node.js Typescript, Python and Java. 
 
  The Frontend, in [React](./reactjs-boardgames/README.md), displays a list of boardgames, these boardgames are provided by 3 rest api in Python, Node.js and Java.
