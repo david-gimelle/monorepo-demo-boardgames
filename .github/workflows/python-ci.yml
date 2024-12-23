@@ -27,16 +27,7 @@ jobs:
       run: echo "BRANCH_NAME=${{ steps.extract-branch-name.outputs.branch_name }}" >> $GITHUB_ENV
 
     - name: Display branch name from composite action
-      run: echo "Branch name is ${{ env.BRANCH_NAME }}"  
-
-    - name: Call reusable workflow to extract branch name
-      uses: ./.github/workflows/extract-branch-name.yml
-
-    - name: Set branch name from
-      run: echo "BRANCH_NAME=${{ needs.extract-branch-name.outputs.branch_name }}" >> $GITHUB_ENV
-
-    - name: Display branch name from
-      run: echo "Branch name from is ${{ env.BRANCH_NAME }}"   
+      run: echo "Branch name is ${{ env.BRANCH_NAME }}"     
 
     - name: Set up Python
       uses: actions/setup-python@v4 
