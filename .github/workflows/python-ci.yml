@@ -13,9 +13,22 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
+    env:
+      BRANCH_NAME: ''
+
     steps:
     - name: Checkout code
-      uses: actions/checkout@v4   
+      uses: actions/checkout@v4
+
+    - name: Call composite action to extract branch name
+      id: extract-branch-name
+      uses: ./.github/actions/extract-branch-name
+
+    - name: Set branch name from composite action
+      run: echo "BRANCH_NAME=${{ steps.extract-branch-name.outputs.branch_name }}" >> $GITHUB_ENV
+
+    - name: Display branch name from composite action
+      run: echo "Branch name is ${{ env.BRANCH_NAME }}"    
 
     - name: Set up Python
       uses: actions/setup-python@v4 
@@ -54,14 +67,18 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v4
 
-    - name: Log in to GitHub Docker registry
-      run: echo "${{ secrets.GHCR_PAT }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+    - name: Call composite action to extract branch name
+      id: extract-branch-name
+      uses: ./.github/actions/extract-branch-name
 
     - name: Set branch name from composite action
       run: echo "BRANCH_NAME=${{ steps.extract-branch-name.outputs.branch_name }}" >> $GITHUB_ENV
 
     - name: Display branch name from composite action
-      run: echo "Branch name is ${{ env.BRANCH_NAME }}"  
+      run: echo "Branch name is ${{ env.BRANCH_NAME }}"       
+
+    - name: Log in to GitHub Docker registry
+      run: echo "${{ secrets.GHCR_PAT }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
       
     - name: Build Docker image
       run: |
