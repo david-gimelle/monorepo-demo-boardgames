@@ -20,6 +20,24 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v4
 
+    - name: Call composite action to extract branch name
+      uses: ./.github/actions/extract-branch-name
+
+    - name: Set branch name from composite action
+      run: echo "BRANCH_NAME=${{ steps.extract-branch-name.outputs.branch_name }}" >> $GITHUB_ENV
+
+    - name: Display branch name from composite action
+      run: echo "Branch name is ${{ env.BRANCH_NAME }}"  
+
+    - name: Call reusable workflow to extract branch name
+      uses: ./.github/workflows/extract-branch-name.yml
+
+    - name: Set branch name from
+      run: echo "BRANCH_NAME=${{ needs.extract-branch-name.outputs.branch_name }}" >> $GITHUB_ENV
+
+    - name: Display branch name from
+      run: echo "Branch name from is ${{ env.BRANCH_NAME }}"   
+
     - name: Set up Python
       uses: actions/setup-python@v4 
       with:
@@ -46,15 +64,18 @@ jobs:
         poetry run pytest
       working-directory: python-boardgames-api
 
-    - name: Call reusable workflow to extract branch name
-      uses: ./.github/workflows/extract-branch-names.yml
-
-    - name: Set branch name from reusable workflow
-      run: echo "BRANCH_NAME=${{ needs.extract-branch-name.outputs.branch_name }}" >> $GITHUB_ENV
-
+    - name: Extract branch name
+      run: |
+        if [ "${{ github.event_name }}" == "pull_request" ]; then
+          echo "BRANCH_NAME=${{ github.head_ref }}" >> $GITHUB_ENV
+          echo "::set-output name=branch_name::${{ github.head_ref }}"
+        else
+          echo "BRANCH_NAME=${{ github.ref_name }}" >> $GITHUB_ENV
+          echo "::set-output name=branch_name::${{ github.ref_name }}"
+        fi
+    
     - name: Display branch name
       run: echo "Branch name is ${{ env.BRANCH_NAME }}"    
-
 
   build-image-push:
     runs-on: ubuntu-latest
