@@ -46,16 +46,12 @@ jobs:
         poetry run pytest
       working-directory: python-boardgames-api
 
-    - name: Extract branch name
-      run: |
-        if [ "${{ github.event_name }}" == "pull_request" ]; then
-          echo "BRANCH_NAME=${{ github.head_ref }}" >> $GITHUB_ENV
-          echo "::set-output name=branch_name::${{ github.head_ref }}"
-        else
-          echo "BRANCH_NAME=${{ github.ref_name }}" >> $GITHUB_ENV
-          echo "::set-output name=branch_name::${{ github.ref_name }}"
-        fi
-    
+    - name: Call reusable workflow to extract branch name
+      uses: ./.github/workflows/extract-branch-names.yml
+
+    - name: Set branch name from reusable workflow
+      run: echo "BRANCH_NAME=${{ needs.extract-branch-name.outputs.branch_name }}" >> $GITHUB_ENV
+
     - name: Display branch name
       run: echo "Branch name is ${{ env.BRANCH_NAME }}"    
 
