@@ -20,4 +20,5 @@ runs:
         fi
 
     - name: Display branch name from CA
+      shell: bash
       run: echo "Branch name is ${{ env.BRANCH_NAME }}"       
