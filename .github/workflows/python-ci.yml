@@ -13,22 +13,9 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
-    env:
-      BRANCH_NAME: ''
-
     steps:
     - name: Checkout code
-      uses: actions/checkout@v4
-
-    - name: Call composite action to extract branch name
-      id: extract-branch-name
-      uses: david-gimelle/lab/.github/actions/extract-branch-name@main
-
-    - name: Set branch name from composite action
-      run: echo "BRANCH_NAME=${{ steps.extract-branch-name.outputs.branch_name }}" >> $GITHUB_ENV
-
-    - name: Display branch name from composite action
-      run: echo "Branch name is ${{ env.BRANCH_NAME }}"   
+      uses: actions/checkout@v4 
 
     - name: Set up Python
       uses: actions/setup-python@v4 
@@ -112,10 +99,7 @@ jobs:
       uses: david-gimelle/lab/.github/actions/extract-branch-name@main
 
     - name: Set branch name from composite action
-      run: echo "BRANCH_NAME=${{ steps.extract-branch-name.outputs.branch_name }}" >> $GITHUB_ENV
-
-    - name: Display branch name from composite action
-      run: echo "Branch name is ${{ env.BRANCH_NAME }}"   
+      run: echo "BRANCH_NAME=${{ steps.extract-branch-name.outputs.branch_name }}" >> $GITHUB_ENV  
 
     - name: Set up Google Cloud SDK
       uses: google-github-actions/setup-gcloud@v1
