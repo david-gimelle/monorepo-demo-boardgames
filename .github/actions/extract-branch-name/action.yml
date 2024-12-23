@@ -21,4 +21,4 @@ runs:
 
     - name: Display branch name from CA
       shell: bash
-      run: echo "Branch name is ${{ env.BRANCH_NAME }}"       
+      run: echo "Branch name from CA is ${{ steps.extract_branch.outputs.branch_name }}"
