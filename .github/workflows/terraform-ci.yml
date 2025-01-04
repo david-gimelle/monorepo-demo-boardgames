@@ -23,7 +23,7 @@ jobs:
       env:
         GCP_PROJECT_ID: ${{ vars.GCP_PROJECT_ID }}
         GCP_REGION: ${{ vars.GKE_CLUSTER_ZONE }}
-        GKE_CLUSTER_NAME: ${{ vars.GGKE_CLUSTER_NAME_TF }}
+        GKE_CLUSTER_NAME: ${{ vars.GKE_CLUSTER_NAME_TF }}
         GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS_GKE }}
       run: |
         echo "TF_VAR_project_id=${GCP_PROJECT_ID}" >> $GITHUB_ENV
