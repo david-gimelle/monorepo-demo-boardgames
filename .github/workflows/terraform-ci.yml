@@ -20,10 +20,17 @@ jobs:
       uses: hashicorp/setup-terraform@v2
 
     - name: Set environment variables
+      env:
+        GCP_PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
+        GCP_REGION: "us-central1"
+        GKE_CLUSTER_NAME: "my-gke-cluster"
+        GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS_GKE }}
       run: |
-        echo "TF_VAR_project_id=${{ vars.GCP_PROJECT_ID }}" >> $GITHUB_ENV
-        echo "TF_VAR_region=${{ vars.GKE_CLUSTER_ZONE }}" >> $GITHUB_ENV
-        echo "TF_VAR_cluster_name=${{ vars.GKE_CLUSTER_NAME_TF }}" >> $GITHUB_ENV
+        echo "TF_VAR_project_id=${GCP_PROJECT_ID}" >> $GITHUB_ENV
+        echo "TF_VAR_region=${GCP_REGION}" >> $GITHUB_ENV
+        echo "TF_VAR_cluster_name=${GKE_CLUSTER_NAME}" >> $GITHUB_ENV
+        echo "${GOOGLE_CREDENTIALS}" > ${HOME}/gcloud-key.json
+        echo "GOOGLE_APPLICATION_CREDENTIALS=${HOME}/gcloud-key.json" >> $GITHUB_ENV
 
     - name: Display environment variables
       run: |
@@ -43,17 +50,3 @@ jobs:
       if: github.ref == 'refs/heads/main'
       run: terraform apply -auto-approve tfplan
       working-directory: ./envs/dev
-
-    - name: Capture Outputs
-      id: capture-outputs
-      run: |
-        echo "KUBERNETES_CLUSTER_NAME=$(terraform output -raw kubernetes_cluster_name)" >> $GITHUB_ENV
-        echo "KUBERNETES_CLUSTER_ENDPOINT=$(terraform output -raw kubernetes_cluster_endpoint)" >> $GITHUB_ENV
-        echo "KUBERNETES_CLUSTER_CA_CERTIFICATE=$(terraform output -raw kubernetes_cluster_ca_certificate)" >> $GITHUB_ENV
-      working-directory: ./envs/dev
-
-    - name: Display Captured Outputs
-      run: |
-        echo "Kubernetes Cluster Name: $KUBERNETES_CLUSTER_NAME"
-        echo "Kubernetes Cluster Endpoint: $KUBERNETES_CLUSTER_ENDPOINT"
-        echo "Kubernetes Cluster CA Certificate: $KUBERNETES_CLUSTER_CA_CERTIFICATE"
