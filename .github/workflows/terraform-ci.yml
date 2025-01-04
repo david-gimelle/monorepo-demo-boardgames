@@ -1,0 +1,59 @@
+name: Terraform CI/CD
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  terraform:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Set up Terraform
+      uses: hashicorp/setup-terraform@v2
+
+    - name: Set environment variables
+      run: |
+        echo "TF_VAR_project_id=${{ vars.GCP_PROJECT_ID }}" >> $GITHUB_ENV
+        echo "TF_VAR_region=${{ vars.GKE_CLUSTER_ZONE }}" >> $GITHUB_ENV
+        echo "TF_VAR_cluster_name=${{ vars.GKE_CLUSTER_NAME_TF }}" >> $GITHUB_ENV
+
+    - name: Display environment variables
+      run: |
+        echo "Project ID: $TF_VAR_project_id"
+        echo "Region: $TF_VAR_region"
+        echo "Cluster Name: $TF_VAR_cluster_name"
+
+    - name: Terraform Init
+      run: terraform init
+      working-directory: ./envs/dev
+
+    - name: Terraform Plan
+      run: terraform plan -out=tfplan
+      working-directory: ./envs/dev
+
+    - name: Terraform Apply
+      if: github.ref == 'refs/heads/main'
+      run: terraform apply -auto-approve tfplan
+      working-directory: ./envs/dev
+
+    - name: Capture Outputs
+      id: capture-outputs
+      run: |
+        echo "KUBERNETES_CLUSTER_NAME=$(terraform output -raw kubernetes_cluster_name)" >> $GITHUB_ENV
+        echo "KUBERNETES_CLUSTER_ENDPOINT=$(terraform output -raw kubernetes_cluster_endpoint)" >> $GITHUB_ENV
+        echo "KUBERNETES_CLUSTER_CA_CERTIFICATE=$(terraform output -raw kubernetes_cluster_ca_certificate)" >> $GITHUB_ENV
+      working-directory: ./envs/dev
+
+    - name: Display Captured Outputs
+      run: |
+        echo "Kubernetes Cluster Name: $KUBERNETES_CLUSTER_NAME"
+        echo "Kubernetes Cluster Endpoint: $KUBERNETES_CLUSTER_ENDPOINT"
+        echo "Kubernetes Cluster CA Certificate: $KUBERNETES_CLUSTER_CA_CERTIFICATE"
