@@ -21,7 +21,7 @@ jobs:
 
     - name: Set environment variables
       env:
-        GCP_PROJECT_ID: ${{ vars.GCP_PROJECT_ID }}
+        GCP_PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
         GCP_REGION: ${{ vars.GKE_CLUSTER_ZONE }}
         GKE_CLUSTER_NAME: ${{ vars.GKE_CLUSTER_NAME_TF }}
         GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS_GKE }}
@@ -50,3 +50,16 @@ jobs:
       if: github.ref == 'refs/heads/main'
       run: terraform apply -auto-approve tfplan
       working-directory: ./envs/dev
+
+    - name: Install kubectl
+      uses: azure/setup-kubectl@v1
+      with:
+        version: 'latest'
+
+    - name: Configure kubectl
+      run: |
+        gcloud auth activate-service-account --key-file=${HOME}/gcloud-key.json
+        gcloud container clusters get-credentials $TF_VAR_cluster_name --region $TF_VAR_region --project $TF_VAR_project_id
+
+    - name: Check GKE Cluster Status
+      run: kubectl get nodes
