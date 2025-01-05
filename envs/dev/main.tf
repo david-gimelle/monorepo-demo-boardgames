@@ -14,6 +14,7 @@ resource "google_container_cluster" "primary" {
   name     = var.cluster_name
   location = var.region
 
+  initial_node_count = 1  // Ensure initial_node_count is set to a value greater than zero
   min_master_version = "1.30.6-gke.1125000"
   release_channel {
     channel = "REGULAR"
@@ -54,7 +55,7 @@ resource "google_container_node_pool" "primary_nodes" {
 
   node_config {
     preemptible  = true
-    machine_type = "e2-micro"
+    machine_type = "f1-micro"  // Updated to use the f1-micro machine type
     disk_size_gb = 10
     oauth_scopes = [
       "https://www.googleapis.com/auth/cloud-platform",
