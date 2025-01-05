@@ -21,7 +21,7 @@ jobs:
 
     - name: Set environment variables
       env:
-        GCP_PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
+        GCP_PROJECT_ID: ${{ vars.GCP_PROJECT_ID }}
         GCP_REGION: ${{ vars.GKE_CLUSTER_ZONE }}
         GKE_CLUSTER_NAME: ${{ vars.GKE_CLUSTER_NAME_TF }}
         GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS_GKE }}
