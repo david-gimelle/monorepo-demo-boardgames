@@ -33,7 +33,7 @@ def delete_lock_file():
 
 def install_dependencies():
     print("Installing dependencies with Poetry...")
-    run_command("poetry install -vv")
+    run_command("poetry install --no-root -vv")
 
 def run_tests():
     print("Running tests with pytest...")
