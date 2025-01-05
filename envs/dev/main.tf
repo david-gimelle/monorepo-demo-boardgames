@@ -14,10 +14,6 @@ resource "google_container_cluster" "primary" {
   name     = var.cluster_name
   location = var.region
 
-  autopilot {
-    enabled = true
-  }
-
   min_master_version = "1.30.6-gke.1125000"
   release_channel {
     channel = "REGULAR"
@@ -78,7 +74,7 @@ resource "google_container_node_pool" "primary_nodes" {
 
   autoscaling {
     min_node_count = 1
-    max_node_count = 1
+    max_node_count = 3
   }
 
   timeouts {
