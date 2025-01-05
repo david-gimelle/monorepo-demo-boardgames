@@ -25,27 +25,6 @@ resource "google_container_cluster" "primary" {
     enabled = true
   }
 
-  network = "default"
-  subnetwork = "default"
-
-  ip_allocation_policy {
-    use_ip_aliases = true
-    cluster_secondary_range_name = "gke-boardgames-cluster-pods-6dc17bf7"
-    services_secondary_range_name = "default"
-  }
-
-  master_authorized_networks_config {
-    cidr_blocks = []
-  }
-
-  maintenance_policy {
-    window {
-      daily_maintenance_window {
-        start_time = "03:00"
-      }
-    }
-  }
-
   addons_config {
     http_load_balancing {
       disabled = false
