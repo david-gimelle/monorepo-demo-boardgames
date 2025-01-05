@@ -14,7 +14,6 @@ flask-cors = "^3.0.10"
 [tool.poetry.dev-dependencies]
 pytest = "^6.2.4"
 
-
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"

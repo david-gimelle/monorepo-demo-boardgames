@@ -30,7 +30,7 @@ jobs:
 
     - name: Install dependencies
       run: |
-        poetry install
+        poetry install --no-root
       working-directory: python-boardgames-api
 
     - name: Run install-build.py with --skip-install-poetry to build image
