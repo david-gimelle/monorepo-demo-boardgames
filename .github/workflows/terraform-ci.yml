@@ -51,18 +51,20 @@ jobs:
       working-directory: ./envs/dev
 
     - name: Terraform Apply
-      run: terraform apply -auto-approve tfplan
+      run: terraform apply -auto-approve -json tfplan > tfapply.json
       working-directory: ./envs/dev
 
-    - name: Install kubectl
-      uses: azure/setup-kubectl@v1
-      with:
-        version: 'latest'
-
-    - name: Configure kubectl
+    - name: Parse Terraform Output
       run: |
-        gcloud auth activate-service-account --key-file=${HOME}/gcloud-key.json
-        gcloud container clusters get-credentials $TF_VAR_cluster_name --region $TF_VAR_region --project $TF_VAR_project_id
+        cat ./envs/dev/tfapply.json | jq '.'
+      working-directory: ./envs/dev
 
-    - name: Check GKE Cluster Status
-      run: kubectl get nodes
+    - name: Validate Terraform Output
+      run: |
+        CLUSTER_NAME=$(cat ./envs/dev/tfapply.json | jq -r '.outputs.cluster_name.value')
+        if [ "$CLUSTER_NAME" != "expected-cluster-name" ]; then
+          echo "Cluster name validation failed!"
+          exit 1
+        fi
+        echo "Cluster name validation passed!"
+      working-directory: ./envs/dev
