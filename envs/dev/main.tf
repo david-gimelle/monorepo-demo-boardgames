@@ -69,7 +69,7 @@ resource "google_container_node_pool" "primary_nodes" {
 
   node_config {
     preemptible  = true
-    machine_type = "e2-medium"
+    machine_type = "e2-micro"
     oauth_scopes = [
       "https://www.googleapis.com/auth/cloud-platform",
     ]
@@ -88,7 +88,7 @@ resource "google_container_node_pool" "primary_nodes" {
 
   autoscaling {
     min_node_count = 1
-    max_node_count = 1
+    max_node_count = 3
   }
 
   timeouts {
