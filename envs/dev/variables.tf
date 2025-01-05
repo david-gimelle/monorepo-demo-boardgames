@@ -14,3 +14,8 @@ variable "cluster_name" {
   type        = string
   default     = "my-gke-cluster"
 }
+
+variable "gcs_bucket_name" {
+  description = "The name of the GCS bucket to store the Terraform state"
+  type        = string
+}
