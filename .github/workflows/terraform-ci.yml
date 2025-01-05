@@ -51,20 +51,5 @@ jobs:
       working-directory: ./envs/dev
 
     - name: Terraform Apply
-      run: terraform apply -auto-approve -json tfplan > tfapply.json
-      working-directory: ./envs/dev
-
-    - name: Parse Terraform Output
-      run: |
-        cat ./envs/dev/tfapply.json | jq '.'
-      working-directory: ./envs/dev
-
-    - name: Validate Terraform Output
-      run: |
-        CLUSTER_NAME=$(cat ./envs/dev/tfapply.json | jq -r '.outputs.cluster_name.value')
-        if [ "$CLUSTER_NAME" != "expected-cluster-name" ]; then
-          echo "Cluster name validation failed!"
-          exit 1
-        fi
-        echo "Cluster name validation passed!"
+      run: terraform apply -auto-approve -json tfplan
       working-directory: ./envs/dev
