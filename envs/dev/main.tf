@@ -25,6 +25,8 @@ resource "google_container_cluster" "primary" {
     enabled = true
   }
 
+  deletion_protection = false
+
   addons_config {
     http_load_balancing {
       disabled = false
@@ -85,8 +87,8 @@ resource "google_container_node_pool" "primary_nodes" {
   }
 
   autoscaling {
-    min_node_count = 0
-    max_node_count = 3
+    min_node_count = 1
+    max_node_count = 1
   }
 
   timeouts {
