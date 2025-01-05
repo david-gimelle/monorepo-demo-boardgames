@@ -8,7 +8,6 @@ terraform {
 provider "google" {
   project = var.project_id
   region  = var.region
-  version = ">= 3.75.0"  // Specify the required provider version
 }
 
 resource "google_container_cluster" "primary" {
