@@ -43,7 +43,7 @@ resource "google_container_cluster" "primary" {
   }
 
   node_config {
-    machine_type = "e2-medium"
+    machine_type = "e2-micro"
     oauth_scopes = [
       "https://www.googleapis.com/auth/cloud-platform",
     ]
