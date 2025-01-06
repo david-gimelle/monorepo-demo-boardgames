@@ -58,7 +58,7 @@ jobs:
       
     - name: Build Docker image
       run: |
-        docker build -t ./${{ env.APP_NAME }}:${{ env.BRANCH_NAME }} .
+        docker build -t ${{ env.APP_NAME }}:${{ env.BRANCH_NAME }} .
       working-directory: ./${{ env.WORKING_DIR }}  
 
     - name: Tag Docker image
