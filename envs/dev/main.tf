@@ -12,7 +12,7 @@ provider "google" {
 
 resource "google_container_cluster" "primary" {
   name     = var.cluster_name
-  location = var.region
+  location = var.zone
 
   initial_node_count = 1  // Ensure initial_node_count is set to a value greater than zero
   min_master_version = "1.30.6-gke.1125000"
