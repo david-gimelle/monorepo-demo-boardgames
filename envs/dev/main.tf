@@ -55,7 +55,7 @@ resource "google_container_node_pool" "primary_nodes" {
 
   node_config {
     preemptible  = true
-    machine_type = "e2-micro"  // Updated to use the f1-micro machine type
+    machine_type = "e2-micro"
     disk_size_gb = 10
     oauth_scopes = [
       "https://www.googleapis.com/auth/cloud-platform",
