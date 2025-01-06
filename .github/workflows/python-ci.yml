@@ -85,12 +85,12 @@ jobs:
     needs: build-image-push
 
     env:
-      GKE_CLUSTER_NAME: ${{ vars.GKE_CLUSTER_NAME }}
+      GKE_CLUSTER_NAME: ${{ vars.GKE_CLUSTER_NAME_TF }}
       GKE_CLUSTER_ZONE: ${{ vars.GKE_CLUSTER_ZONE }}
       GCP_PROJECT_ID: ${{ vars.GCP_PROJECT_ID }}
       BRANCH_NAME: ''
 
-      
+
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
