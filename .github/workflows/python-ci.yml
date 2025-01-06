@@ -90,6 +90,7 @@ jobs:
       GCP_PROJECT_ID: ${{ vars.GCP_PROJECT_ID }}
       BRANCH_NAME: ''
 
+      
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
