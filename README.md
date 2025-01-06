@@ -16,7 +16,7 @@ graph TD;
 
 Each application has it own github worklows in the .github/workflows folder in the root of the main folder
 
-# What this monorepo demonstrate?
+# What this monorepo demonstrates?
 - How to build some simple web application in Python, Java, Node and Reactjs
 - How to setup unit tests and builds
 - How to setup e2e test with Playwright and Node
