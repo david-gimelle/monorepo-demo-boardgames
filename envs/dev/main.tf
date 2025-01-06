@@ -87,20 +87,3 @@ resource "google_container_node_pool" "primary_nodes" {
 
 }
 
-resource "google_compute_firewall" "allow_ghcr_io" {
-  name    = "allow-ghcr-io"
-  network = "default"
-
-  direction = "EGRESS"
-  priority  = 1000
-
-  allow {
-    protocol = "tcp"
-    ports    = ["443"]
-  }
-
-  destination_ranges = ["0.0.0.0/0"]
-
-  target_tags = ["gke-node"]
-}
-
