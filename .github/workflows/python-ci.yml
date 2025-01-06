@@ -8,6 +8,8 @@ on:
 
 env:
   K8S_NAMESPACE: python-boardgames-api
+  APP_NAME: python-boardgames-api 
+  WORKING_DIR: python-boardgames-api
 
 jobs:
   build:

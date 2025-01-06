@@ -39,11 +39,9 @@ jobs:
 
     - name: Display environment variables
       run: |
-        echo "Project ID: $TF_VAR_project_id"
         echo "Region: $TF_VAR_region"
         echo "Zone: $TF_VAR_zone"
         echo "Cluster Name: $TF_VAR_cluster_name"
-        echo "GCS Bucket Name: $TF_VAR_gcs_bucket_name"
 
     - name: Terraform Init
       run: terraform init
