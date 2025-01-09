@@ -71,16 +71,16 @@ jobs:
       
     - name: Build Docker image
       run: |
-        docker build -t python-boardgames-api:${{ env.BRANCH_NAME }} .
-      working-directory: python-boardgames-api  
+        docker build -t ${{ env.APP_NAME }}:${{ env.BRANCH_NAME }} .
+      working-directory: ./${{ env.WORKING_DIR }}  
 
     - name: Tag Docker image
       run: |
-        docker tag python-boardgames-api:${{ env.BRANCH_NAME }} ghcr.io/${{ github.repository }}/python-boardgames-api:${{ env.BRANCH_NAME }}
+        docker tag ${{ env.APP_NAME }}:${{ env.BRANCH_NAME }} ghcr.io/${{ github.repository }}/${{ env.APP_NAME }}:${{ env.BRANCH_NAME }}
 
     - name: Push Docker image to GitHub Packages
       run: |
-        docker push ghcr.io/${{ github.repository }}/python-boardgames-api:${{ env.BRANCH_NAME }}
+        docker push ghcr.io/${{ github.repository }}/${{ env.APP_NAME }}:${{ env.BRANCH_NAME }}
 
   deploy:
     runs-on: ubuntu-latest
