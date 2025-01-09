@@ -35,7 +35,7 @@ jobs:
       run: ./gradlew build
       working-directory: ./${{ env.WORKING_DIR }}
 
-  call-reusable-workflow:
+  call-build-image-push:
     uses: david-gimelle/lab/.github/workflows/build-image-push-to-ghcr.yml@main
     needs: build
     
