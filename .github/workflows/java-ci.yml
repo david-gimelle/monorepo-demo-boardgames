@@ -1,11 +1,22 @@
 name: Java CI
 
 on:
-  push:
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+env:
+  K8S_NAMESPACE: java-boardgames-api
+  APP_NAME: java-boardgames-api 
+  WORKING_DIR: java-boardgames-api    
 
 jobs:
   build:
     runs-on: ubuntu-latest
+    outputs:
+      APP_NAME: ${{ env.APP_NAME }}
+      WORKING_DIR: ${{ env.WORKING_DIR }}
     steps:
 
     - name: Checkout sources
@@ -22,5 +33,14 @@ jobs:
 
     - name: Build with Gradle
       run: ./gradlew build
-      working-directory: ./java-boardgames-api
-      
+      working-directory: ./${{ env.WORKING_DIR }}
+
+  call-build-image-push:
+    uses: david-gimelle/lab/.github/workflows/build-image-push-to-ghcr.yml@main
+    needs: build
+    
+    with:
+      APP_NAME: ${{ needs.build.outputs.APP_NAME }}
+      WORKING_DIR: ${{ needs.build.outputs.WORKING_DIR }}
+    secrets:
+      GHCR_PAT: ${{ secrets.GHCR_PAT }}

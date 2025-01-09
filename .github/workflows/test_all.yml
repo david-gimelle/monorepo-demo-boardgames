@@ -22,7 +22,7 @@ jobs:
 
     - name: Install Python dependencies
       run: |
-        poetry install
+        poetry install --no-root
       working-directory: python-boardgames-api
 
     - name: Run Python tests
