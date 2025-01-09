@@ -32,39 +32,12 @@ jobs:
       run: ./gradlew build
       working-directory: ./${{ env.WORKING_DIR }}
 
-  build-image-push:
-    runs-on: ubuntu-latest
+  call-reusable-workflow:
+    uses: david-gimelle/lab/.github/workflows/build-image-push-to-ghcr.yml@main
     needs: build
-
-    env:
-      BRANCH_NAME: ''
-
-    steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
-
-    - name: Call composite action to extract branch name
-      id: extract-branch-name
-      uses: david-gimelle/lab/.github/actions/extract-branch-name@main
-
-    - name: Set branch name from composite action
-      run: echo "BRANCH_NAME=${{ steps.extract-branch-name.outputs.branch_name }}" >> $GITHUB_ENV
-
-    - name: Display branch name from composite action
-      run: echo "Branch name is ${{ env.BRANCH_NAME }}"       
-
-    - name: Log in to GitHub Docker registry
-      run: echo "${{ secrets.GHCR_PAT }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
-      
-    - name: Build Docker image
-      run: |
-        docker build -t ${{ env.APP_NAME }}:${{ env.BRANCH_NAME }} .
-      working-directory: ./${{ env.WORKING_DIR }}  
-
-    - name: Tag Docker image
-      run: |
-        docker tag ${{ env.APP_NAME }}:${{ env.BRANCH_NAME }} ghcr.io/${{ github.repository }}/${{ env.APP_NAME }}:${{ env.BRANCH_NAME }}
-
-    - name: Push Docker image to GitHub Packages
-      run: |
-        docker push ghcr.io/${{ github.repository }}/${{ env.APP_NAME }}:${{ env.BRANCH_NAME }}
+    
+    with:
+      APP_NAME: ${{ env.APP_NAME }}
+      WORKING_DIR: ${{ env.WORKING_DIR }}
+    secrets:
+      GHCR_PAT: ${{ secrets.GHCR_PAT }}
