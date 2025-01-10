@@ -1,11 +1,5 @@
 TODO list:
-- update doc on release
-- Deploy the python app on minikube
-- Add docker images build to each services
-- Deploy it on gks with github action and kubernetes in test env
-- add E2E tests with playwright in the pipeline for Test envn
 - deploy it all on AKS/Terraform/Github Action in test env and prod env
-- Add Helms
 - add smoke tests with playwright in the pipeline for Test env
 - add smoke tests with playwright in the pipeline for Prod env
 - add E2E tests with playwright in the pipeline for Prod env
