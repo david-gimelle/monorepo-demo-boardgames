@@ -32,3 +32,9 @@ Run the unit test with
 # How to change port and url of the react application for cors authorisation
 
 This is configurable from the file config.ts
+
+# Images
+
+you can build one localy with this command
+> docker build -t nodejs-boardgames-api .
+> docker build --no-cache --progress=plain -t nodejs-boardgames-api .
