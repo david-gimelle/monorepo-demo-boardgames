@@ -41,3 +41,13 @@ jobs:
     - name: Run tests
       run: npm test
       working-directory: ./${{ env.WORKING_DIR }}
+
+  call-build-image-push:
+        uses: david-gimelle/lab/.github/workflows/build-image-push-to-ghcr.yml@main
+        needs: build
+        
+        with:
+          APP_NAME: ${{ needs.build.outputs.APP_NAME }}
+          WORKING_DIR: ${{ needs.build.outputs.WORKING_DIR }}
+        secrets:
+          GHCR_PAT: ${{ secrets.GHCR_PAT }}
