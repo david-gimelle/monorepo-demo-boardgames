@@ -11,7 +11,7 @@ provider "google" {
 }
 
 module "python_cluster" {
-  source = "../../modules/gke-cluster"
+  source = "../../../modules/gke-cluster"
 
   cluster_name                      = var.cluster_name
   zone                              = var.zone
