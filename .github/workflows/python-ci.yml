@@ -105,9 +105,9 @@ jobs:
 
     - name: Create Kubernetes namespace
       run: |
-        kubectl create namespace python-boardgames-api || true
+        kubectl create namespace ${{ env.K8S_NAMESPACE }} || true
     
-        - name: Delete existing Docker registry secret if it exists
+    - name: Delete existing Docker registry secret if it exists
       run: |
           kubectl delete secret ghcr-secret --namespace=${{ env.K8S_NAMESPACE }} || echo "Secret does not exist"
   
