@@ -1,0 +1,41 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: java-boardgames-api
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: java-boardgames-api
+  namespace: java-boardgames-api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: java-boardgames-api
+  template:
+    metadata:
+      labels:
+        app: java-boardgames-api
+    spec:
+      containers:
+      - name: java-boardgames-api
+        image: ghcr.io/david-gimelle/monorepo-demo-boardgames/java-boardgames-api:placeholder
+        ports:
+        - containerPort: 8082
+      imagePullSecrets:
+      - name: ghcr-secret
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: java-boardgames-api-service
+  namespace: java-boardgames-api
+spec:
+  type: LoadBalancer
+  selector:
+    app: java-boardgames-api
+  ports:
+    - protocol: TCP
+      port: 8282
+      targetPort: 8082

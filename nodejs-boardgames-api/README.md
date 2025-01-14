@@ -38,3 +38,6 @@ This is configurable from the file config.ts
 you can build one localy with this command
 > docker build -t nodejs-boardgames-api .
 > docker build --no-cache --progress=plain -t nodejs-boardgames-api .
+
+Run it with
+> docker run -p 3000:3000 nodejs-boardgames-api
