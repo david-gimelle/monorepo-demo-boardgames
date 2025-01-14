@@ -1,5 +1,5 @@
 # monorepo-demo-gamesboards
-If you ever wonder how a monorepo works. Check this one that has 4 applications in 4 differents programming languages: React javascript, Node.js Typescript, Python and Java. 
+If you ever wonder how a monorepo works. Check this one that has 4 applications in 4 differents programming languages: React javascript, Node.js Typescript, Python and Java, deployed on Google Cloud Platform with Github Action workflow, Terraform and Kubernetes (GKE).
 
  The Frontend, in [React](./reactjs-boardgames/README.md), displays a list of boardgames, these boardgames are provided by 3 rest api in Python, Node.js and Java.
     - [React Javascript App](./reactjs-boardgames/README.md) 
