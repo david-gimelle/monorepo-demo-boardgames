@@ -103,7 +103,11 @@ jobs:
       run: |
         gcloud container clusters get-credentials ${{ env.GKE_CLUSTER_NAME }} --zone ${{ env.GKE_CLUSTER_ZONE }} --project ${{ env.GCP_PROJECT_ID }}
 
-    - name: Delete existing Docker registry secret if it exists
+    - name: Create Kubernetes namespace
+      run: |
+        kubectl create namespace python-boardgames-api || true
+    
+        - name: Delete existing Docker registry secret if it exists
       run: |
           kubectl delete secret ghcr-secret --namespace=${{ env.K8S_NAMESPACE }} || echo "Secret does not exist"
   
