@@ -16,7 +16,6 @@ module "python_cluster" {
   cluster_name                      = var.cluster_name
   zone                              = var.zone
   initial_node_count                = 1
-  min_master_version                = "1.30.6-gke.1125000"
   release_channel                   = "REGULAR"
   vertical_pod_autoscaling_enabled  = true
   deletion_protection               = false

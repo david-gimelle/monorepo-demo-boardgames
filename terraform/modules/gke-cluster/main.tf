@@ -3,7 +3,6 @@ resource "google_container_cluster" "primary" {
   location = var.zone
 
   initial_node_count = var.initial_node_count
-  min_master_version = var.min_master_version
   release_channel {
     channel = var.release_channel
   }

@@ -14,11 +14,6 @@ variable "initial_node_count" {
   default     = 1
 }
 
-variable "min_master_version" {
-  description = "The minimum master version"
-  type        = string
-}
-
 variable "release_channel" {
   description = "The release channel"
   type        = string
