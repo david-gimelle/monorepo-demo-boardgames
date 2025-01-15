@@ -11,6 +11,7 @@ on:
 
 env:
   K8S_NAMESPACE: python-boardgames-api
+  K8S_SERVICE_NAME: python-boardgames-api-service
   APP_NAME: python-boardgames-api 
   WORKING_DIR: python-boardgames-api
 
@@ -34,22 +35,22 @@ jobs:
       run: |
         curl -sSL https://install.python-poetry.org | python3 -
         echo "export PATH=$HOME/.local/bin:$PATH" >> $GITHUB_ENV
-      working-directory: python-boardgames-api
+      working-directory: ${{ env.WORKING_DIR }}
 
     - name: Install dependencies
       run: |
         poetry install --no-root
-      working-directory: python-boardgames-api
+      working-directory: ${{ env.WORKING_DIR }}
 
     - name: Run install-build.py with --skip-install-poetry to build image
       run: |
         python install-build.py --skip-install-poetry
-      working-directory: python-boardgames-api  
+      working-directory: ${{ env.WORKING_DIR }}  
 
     - name: Run tests
       run: |
         poetry run pytest
-      working-directory: python-boardgames-api  
+      working-directory: ${{ env.WORKING_DIR }}  
 
   call-build-image-push:
         uses: david-gimelle/lab/.github/workflows/build-image-push-to-ghcr.yml@main
@@ -122,18 +123,18 @@ jobs:
 
     - name: Apply Kubernetes manifests
       run: |
-        kubectl apply -f k8s/test/python-boardgames-api.yml
+        kubectl apply -f k8s/test/${{ env.APP_NAME }}.yml
 
     - name: Display full image name
-      run: echo "Full image name ghcr.io/${{ github.repository }}/python-boardgames-api:${{ env.BRANCH_NAME }}"
+      run: echo "Full image name ghcr.io/${{ github.repository }}/${{ env.APP_NAME }}:${{ env.BRANCH_NAME }}"
 
     - name: Deploy to GKE
       run: |
-        kubectl set image deployment/python-boardgames-api python-boardgames-api=ghcr.io/${{ github.repository }}/python-boardgames-api:${{ env.BRANCH_NAME }} --namespace ${{ env.K8S_NAMESPACE }}
+        kubectl set image deployment/${{ env.APP_NAME }} ${{ env.APP_NAME }}=ghcr.io/${{ github.repository }}/${{ env.APP_NAME }}:${{ env.BRANCH_NAME }} --namespace ${{ env.K8S_NAMESPACE }}
 
     - name: Check Deployment Status
       run: |
-        kubectl rollout status deployment/python-boardgames-api --namespace ${{ env.K8S_NAMESPACE }}
+        kubectl rollout status deployment/${{ env.APP_NAME }} --namespace ${{ env.K8S_NAMESPACE }}
 
     - name: Wait for Service to be Ready
       run: |
@@ -141,12 +142,12 @@ jobs:
     
     - name: Ping Endpoint
       run: |
-          EXTERNAL_IP=$(kubectl get service python-boardgames-api-service --namespace=${{ env.K8S_NAMESPACE }} -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
+          EXTERNAL_IP=$(kubectl get service ${{ env.K8S_SERVICE_NAME }} --namespace=${{ env.K8S_NAMESPACE }} -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
           echo "External IP: $EXTERNAL_IP"
           curl --fail http://$EXTERNAL_IP:8282/ping
       
     - name: Check Health Endpoint
       run: |
-          EXTERNAL_IP=$(kubectl get service python-boardgames-api-service --namespace=${{ env.K8S_NAMESPACE }} -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
+          EXTERNAL_IP=$(kubectl get service ${{ env.K8S_SERVICE_NAME }} --namespace=${{ env.K8S_NAMESPACE }} -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
           echo "External IP: $EXTERNAL_IP"
           curl --fail http://$EXTERNAL_IP:8282/health
