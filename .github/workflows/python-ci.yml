@@ -77,3 +77,4 @@ jobs:
           gcp_project_id: ${{ vars.GCP_PROJECT_ID }}
       secrets:    
           ghcr_pat: ${{ secrets.GHCR_PAT }}
+          gcp_sa_key: ${{ secrets.GCP_SA_KEY }}
