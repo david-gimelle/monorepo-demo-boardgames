@@ -11,6 +11,7 @@ on:
 
 env:
   K8S_NAMESPACE: nodejs-boardgames-api
+  K8S_SERVICE_NAME: java-boardgames-api-service
   APP_NAME: nodejs-boardgames-api 
   WORKING_DIR: nodejs-boardgames-api 
 
@@ -20,6 +21,9 @@ jobs:
     outputs:
       APP_NAME: ${{ env.APP_NAME }}
       WORKING_DIR: ${{ env.WORKING_DIR }}
+      K8S_NAMESPACE: ${{ env.K8S_NAMESPACE }}
+      K8S_SERVICE_NAME: ${{ env.K8S_SERVICE_NAME }}
+
 
     steps:
     - name: Checkout code
