@@ -1,0 +1,57 @@
+name: Terraform Python App
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  terraform:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Set up Terraform
+      uses: hashicorp/setup-terraform@v2
+
+    - name: Set environment variables
+      env:
+        GCP_PROJECT_ID: ${{ vars.GCP_PROJECT_ID }}
+        GCP_REGION: ${{ vars.GKE_CLUSTER_REGION}}
+        GCP_ZONE: ${{ vars.GKE_CLUSTER_ZONE }}
+        GKE_CLUSTER_NAME: ${{ vars.GKE_CLUSTER_NAME_PYTHON }}
+        GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS_GKE }}
+        GCS_BUCKET_NAME: ${{ vars.GCS_BUCKET_NAME }}
+      run: |
+        echo "TF_VAR_project_id=${GCP_PROJECT_ID}" >> $GITHUB_ENV
+        echo "TF_VAR_region=${GCP_REGION}" >> $GITHUB_ENV
+        echo "TF_VAR_zone=${GCP_ZONE}" >> $GITHUB_ENV
+        echo "TF_VAR_cluster_name=${GKE_CLUSTER_NAME}" >> $GITHUB_ENV
+        echo "TF_VAR_gcs_bucket_name=${GCS_BUCKET_NAME}" >> $GITHUB_ENV
+        echo "${GOOGLE_CREDENTIALS}" > ${HOME}/gcloud-key.json
+        echo "GOOGLE_APPLICATION_CREDENTIALS=${HOME}/gcloud-key.json" >> $GITHUB_ENV
+
+    - name: Display environment variables
+      run: |
+        echo "Region: $TF_VAR_region"
+        echo "Zone: $TF_VAR_zone"
+        echo "Cluster Name: $TF_VAR_cluster_name"
+
+    - name: Terraform Init
+      run: terraform init
+      working-directory: ./terraform/envs/dev/python
+
+    - name: Terraform Plan
+      run: terraform plan -out=tfplan
+      working-directory: ./terraform/envs/dev/python
+
+    - name: Terraform Apply
+      if: github.ref == 'refs/heads/main' 
+      run: terraform apply -auto-approve -json tfplan
+      working-directory: ./terraform/envs/dev/python
