@@ -1,3 +1,4 @@
+//TO DELETE
 terraform {
   backend "gcs" {
     bucket  = "boardgames-tf-bucket"
