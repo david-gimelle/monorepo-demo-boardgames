@@ -1,4 +1,4 @@
-name: Terraform Nodejs App
+name: Terraform java App
 
 on:
   push:
