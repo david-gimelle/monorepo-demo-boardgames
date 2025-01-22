@@ -1,4 +1,4 @@
-name: Terraform CI/CD
+name: Terraform Nodejs App
 
 on:
   push:
@@ -25,7 +25,7 @@ jobs:
         GCP_PROJECT_ID: ${{ vars.GCP_PROJECT_ID }}
         GCP_REGION: ${{ vars.GKE_CLUSTER_REGION}}
         GCP_ZONE: ${{ vars.GKE_CLUSTER_ZONE }}
-        GKE_CLUSTER_NAME: ${{ vars.GKE_CLUSTER_NAME_PYTHON }}
+        GKE_CLUSTER_NAME: ${{ vars.GKE_CLUSTER_NAME_NODE }}
         GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS_GKE }}
         GCS_BUCKET_NAME: ${{ vars.GCS_BUCKET_NAME }}
       run: |
@@ -45,13 +45,13 @@ jobs:
 
     - name: Terraform Init
       run: terraform init
-      working-directory: ./terraform/envs/dev/python
+      working-directory: ./terraform/envs/dev/node
 
     - name: Terraform Plan
       run: terraform plan -out=tfplan
-      working-directory: ./terraform/envs/dev/python
+      working-directory: ./terraform/envs/dev/node
 
     - name: Terraform Apply
       if: github.ref == 'refs/heads/main' 
       run: terraform apply -auto-approve -json tfplan
-      working-directory: ./terraform/envs/dev/python
+      working-directory: ./terraform/envs/dev/node

@@ -1,7 +1,7 @@
 terraform {
   backend "gcs" {
     bucket  = "boardgames-tf-bucket"
-    prefix  = "terraform/python/state/dev"
+    prefix  = "terraform/node/state/dev"
   }
 }
 
