@@ -13,7 +13,8 @@ env:
   K8S_NAMESPACE: java-boardgames-api
   K8S_SERVICE_NAME: java-boardgames-api-service
   APP_NAME: java-boardgames-api 
-  WORKING_DIR: java-boardgames-api   
+  WORKING_DIR: java-boardgames-api  
+  PORT: 8282 
 
 jobs:
   build:
@@ -23,6 +24,7 @@ jobs:
       WORKING_DIR: ${{ env.WORKING_DIR }}
       K8S_NAMESPACE: ${{ env.K8S_NAMESPACE }}
       K8S_SERVICE_NAME: ${{ env.K8S_SERVICE_NAME }}
+      PORT: ${{ env.PORT }}
 
     steps:
 
@@ -51,3 +53,19 @@ jobs:
       WORKING_DIR: ${{ needs.build.outputs.WORKING_DIR }}
     secrets:
       GHCR_PAT: ${{ secrets.GHCR_PAT }}
+
+  deploy-webservice-to-gke:
+    uses: david-gimelle/lab/.github/workflows/deploy-web-service-to-gke.yml@main
+    needs: [build, call-build-image-push]
+  
+    with:
+      k8s_namespace: ${{ needs.build.outputs.K8S_NAMESPACE }}
+      k8s_service_name: ${{ needs.build.outputs.K8S_SERVICE_NAME }}
+      app_name: ${{ needs.build.outputs.APP_NAME }}
+      gke_cluster_name: ${{ vars.GKE_CLUSTER_NAME_PYTHON }}
+      gke_cluster_zone: ${{ vars.GKE_CLUSTER_ZONE }}
+      gcp_project_id: ${{ vars.GCP_PROJECT_ID }}
+      port: ${{ needs.build.outputs.PORT }}
+    secrets:    
+            ghcr_pat: ${{ secrets.GHCR_PAT }}
+            gcp_sa_key: ${{ secrets.GCP_SA_KEY }}
