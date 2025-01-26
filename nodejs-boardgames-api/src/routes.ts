@@ -17,6 +17,10 @@ router.get('/ping', (req: Request, res: Response) => {
   res.send('Pong');
 });
 
+router.get('/health', (req: Request, res: Response) => {
+  res.send('Healthy');
+});
+
 router.get('/boardgames', (req: Request, res: Response) => {
   const boardgames = [
     { ...defaultBoardGame, name: "Ticket to ride", origin: "Node App", played: false },

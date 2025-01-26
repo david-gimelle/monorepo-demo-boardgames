@@ -15,6 +15,11 @@ public class Controller {
         return "pong";
     }
 
+    @GetMapping("/health")
+    public String health() {
+        return "healthy";
+    }
+
     @CrossOrigin(origins = "${cors.allowed-origins}")
     @GetMapping("/boardgames")
     public List<Game> getGames() {
