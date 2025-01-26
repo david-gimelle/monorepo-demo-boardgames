@@ -11,7 +11,7 @@ on:
 
 env:
   K8S_NAMESPACE: nodejs-boardgames-api
-  K8S_SERVICE_NAME: java-boardgames-api-service
+  K8S_SERVICE_NAME: nodejs-boardgames-api-service
   APP_NAME: nodejs-boardgames-api 
   WORKING_DIR: nodejs-boardgames-api 
   PORT: 8282
