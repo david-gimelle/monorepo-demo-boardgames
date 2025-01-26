@@ -10,7 +10,7 @@ import java.util.Arrays;
 public class Controller {
 
 
-    @GetMapping("/pingg")
+    @GetMapping("/ping")
     public String ping() {
         return "pong";
     }

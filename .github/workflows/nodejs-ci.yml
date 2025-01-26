@@ -67,7 +67,7 @@ jobs:
           k8s_namespace: ${{ needs.build.outputs.K8S_NAMESPACE }}
           k8s_service_name: ${{ needs.build.outputs.K8S_SERVICE_NAME }}
           app_name: ${{ needs.build.outputs.APP_NAME }}
-          gke_cluster_name: ${{ vars.GKE_CLUSTER_NAME_PYTHON }}
+          gke_cluster_name: ${{ vars.GKE_CLUSTER_NAME_NODE }}
           gke_cluster_zone: ${{ vars.GKE_CLUSTER_ZONE }}
           gcp_project_id: ${{ vars.GCP_PROJECT_ID }}
           port: ${{ needs.build.outputs.PORT }}
