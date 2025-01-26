@@ -21,6 +21,10 @@ router.get('/health', (req: Request, res: Response) => {
   res.send('Healthy');
 });
 
+router.get('/health2', (req: Request, res: Response) => {
+  res.send('Healthy');
+});
+
 router.get('/boardgames', (req: Request, res: Response) => {
   const boardgames = [
     { ...defaultBoardGame, name: "Ticket to ride", origin: "Node App", played: false },
