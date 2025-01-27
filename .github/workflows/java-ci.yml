@@ -25,11 +25,16 @@ jobs:
       K8S_NAMESPACE: ${{ env.K8S_NAMESPACE }}
       K8S_SERVICE_NAME: ${{ env.K8S_SERVICE_NAME }}
       PORT: ${{ env.PORT }}
+      TIMESTAMP: ${{ steps.set-timestamp.outputs.timestamp }}
 
     steps:
 
     - name: Checkout sources
       uses: actions/checkout@v4
+
+    - name: Set timestamp
+      id: set-timestamp
+      run: echo "timestamp=$(date -u +%Y%m%d%H%M%S)" >> $GITHUB_OUTPUT
 
     - name: Setup Java
       uses: actions/setup-java@v4
@@ -51,6 +56,8 @@ jobs:
     with:
       APP_NAME: ${{ needs.build.outputs.APP_NAME }}
       WORKING_DIR: ${{ needs.build.outputs.WORKING_DIR }}
+      timestamp: ${{ needs.build.outputs.TIMESTAMP }}
+
     secrets:
       GHCR_PAT: ${{ secrets.GHCR_PAT }}
 
@@ -66,6 +73,7 @@ jobs:
       gke_cluster_zone: ${{ vars.GKE_CLUSTER_ZONE }}
       gcp_project_id: ${{ vars.GCP_PROJECT_ID }}
       port: ${{ needs.build.outputs.PORT }}
+      timestamp: ${{ needs.build.outputs.TIMESTAMP }}
     secrets:    
             ghcr_pat: ${{ secrets.GHCR_PAT }}
             gcp_sa_key: ${{ secrets.GCP_SA_KEY }}
