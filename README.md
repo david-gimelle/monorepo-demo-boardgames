@@ -33,6 +33,48 @@ Use the python 3 script test_all.py at the root of the folder, it will install a
 # how to run end 2 end tests with playwright
 Check out the [React App](./reactjs-boardgames/README.md) to see how to run them locally
 
+# Deployment to Google Kubernetes Engine (GKE) with Github Workflow
+The backend services (Java app, Python app and Node app) are each one deploye on GKE in their own Kubernetes Cluster. Let's take the case of the Python app to see how this works
+
+The building and deployment of the python app uses this files
+- [terraform-python-app.yml](./.github/workflows/terraform-python-app.yml) : The terraform file that provision the GKE Cluster and the K8s deployment and service for the Python app
+- [python-app-deploy.yml](./.github/workflows/python-app-deploy.yml) : The github workflow that runs the terraform to create the GKE Cluster and deploy the Python app
+- [k8s/test/python-boardgames-api.yml](./k8s/test/python-boardgames-api.yml) : The kubernetes deployment and service file for the Python app. (Manifest file)  
+- [terraform/envs/dev/python/main.tf](./terraform/envs/dev/python/main.tf) : The terraform file that creates the GKE Cluster and the K8s deployment and service for the Python app
+- [terraform/modules/gke-cluster/main.tf](./terraform/modules/gke-cluster/main.tf) : The terraform file that creates the GKE Cluster for any app
+- [david-gimelle/lab/.github/workflows/deploy-web-service-to-gke.yml@main](./david-gimelle/lab/.github/workflows/deploy-web-service-to-gke.yml@main) : The Reusable github workflow that runs the terraform to create the GKE Cluster and deploy the Python app
+
+In short the python app is build as a docker image, this image is pushed to github packages, then this image is deployed on the GKE cluster. The GKE cluster is created by a separete github workflow using terraform and kubernetes manifest file.
+
+Provisioning of the cluster with githaction and terraform:
+```mermaid
+graph TD
+    A[terraform-python-app.yml] -->|executes| B[dev/python/main.tf]
+    B -->|uses module| C[modules/gke-cluster/main.tf]
+    C -->|provisions| D[GKE Cluster]
+```
+
+Deployment of the python app with github action to GKE cluster:
+```mermaid
+graph TD
+    subgraph "Build & Push"
+        A[python-ci.yml] -->|build| B[Docker Image]
+        B -->|push| C[GitHub Packages]
+    end
+
+    subgraph "Deploy"
+        D[deploy-web-service-to-gke.yml] -->|pull image| E[Deploy to GKE]
+        E -->|create| F[K8s Deployment]
+        F -->|expose| G[K8s Service]
+    end
+
+    C -->|reference| D
+  
+```
+
+
+
+
 
 
 
