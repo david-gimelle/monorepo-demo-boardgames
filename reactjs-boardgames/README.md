@@ -43,7 +43,10 @@ The application has been generate with a vite command
 
 # How to change ports and urls of services
 This is configurable from the file config.js. But this will break cors setting and the port must also be changed in every api service for the field cors:allowed-origins
-       
-# How to release the monorepo
-Release are made only from main, use the realease.yml workflow from the github interface, it will increment the version of the monorepo. This version is stored in VERSION file. 
-Every Thursday morning a new release is made if any changes happend in the last 24h in main branch       
+
+# How to build and run the docker image
+The docker image is build with the command
+> docker build -t react-boardgames .
+
+The docker image can be run with the command
+> docker run -d -p 5175:5175 --name react-app react-boardgames
