@@ -1,1 +1,1 @@
-# cluster_name = "my-gke-cluster"
+# cluster_name = "my-aks-cluster"
