@@ -1,7 +1,7 @@
 terraform {
   backend "gcs" {
     bucket  = "boardgames-tf-bucket"
-    prefix  = "terraform/java/state/dev"
+    prefix  = "terraform/node/state/dev"
   }
 }
 
@@ -10,7 +10,7 @@ provider "google" {
   region  = var.region
 }
 
-module "java_cluster" {
+module "react_cluster" {
   source = "../../../modules/gke-cluster"
 
   cluster_name                      = var.cluster_name

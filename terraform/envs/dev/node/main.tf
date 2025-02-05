@@ -10,7 +10,7 @@ provider "google" {
   region  = var.region
 }
 
-module "python_cluster" {
+module "node_cluster" {
   source = "../../../modules/gke-cluster"
 
   cluster_name                      = var.cluster_name
