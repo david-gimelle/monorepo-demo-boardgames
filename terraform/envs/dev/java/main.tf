@@ -1,7 +1,7 @@
 terraform {
   backend "gcs" {
     bucket  = "boardgames-tf-bucket"
-    prefix  = "terraform/java/state/dev"
+    prefix  = "terraform/java/state/test"
   }
 }
 
