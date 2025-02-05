@@ -33,6 +33,10 @@ Use the python 3 script test_all.py at the root of the folder, it will install a
 # how to run end 2 end tests with playwright
 Check out the [React App](./reactjs-boardgames/README.md) to see how to run them locally
 
+# How to release the monorepo
+Release are made only from main, use the realease.yml workflow from the github interface, it will increment the version of the monorepo. This version is stored in VERSION file. 
+Every Thursday morning a new release is made if any changes happend in the last 24h in main branch 
+
 # Deployment to Google Kubernetes Engine (GKE) with Github Workflow
 The backend services (Java app, Python app and Node app) are each one deploye on GKE in their own Kubernetes Cluster. Let's take the case of the Python app to see how this works
 
