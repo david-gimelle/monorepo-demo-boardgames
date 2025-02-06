@@ -22,25 +22,25 @@ jobs:
 
     - name: Set environment variables
       env:
-        GCP_PROJECT_ID: ${{ vars.GCP_PROJECT_ID }}
-        GCP_REGION: ${{ vars.GKE_CLUSTER_REGION}}
-        GCP_ZONE: ${{ vars.GKE_CLUSTER_ZONE }}
-        GKE_CLUSTER_NAME: ${{ vars.GKE_CLUSTER_NAME_REACT }}
-        GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS_GKE }}
-        GCS_BUCKET_NAME: ${{ vars.GCS_BUCKET_NAME }}
+        AZ_RESOURCE_GROUP: ${{ vars.AZ_RESOURCE_GROUP }}
+        AZRM_STORAGE_ACCOUNT: ${{ vars.AZRM_STORAGE_ACCOUNT}}
+        AZRM_CONTAINER_NAME: ${{ vars.AZRM_CONTAINER_NAME }}
+        AKS_CLUSTER_NAME_REACT: ${{ vars.AKS_CLUSTER_NAME_REACT }}
+        AZ_REGION: ${{ vars.AZ_REGION }}
       run: |
-        echo "TF_VAR_project_id=${GCP_PROJECT_ID}" >> $GITHUB_ENV
-        echo "TF_VAR_region=${GCP_REGION}" >> $GITHUB_ENV
-        echo "TF_VAR_zone=${GCP_ZONE}" >> $GITHUB_ENV
-        echo "TF_VAR_cluster_name=${GKE_CLUSTER_NAME}" >> $GITHUB_ENV
-        echo "TF_VAR_gcs_bucket_name=${GCS_BUCKET_NAME}" >> $GITHUB_ENV
-        echo "${GOOGLE_CREDENTIALS}" > ${HOME}/gcloud-key.json
-        echo "GOOGLE_APPLICATION_CREDENTIALS=${HOME}/gcloud-key.json" >> $GITHUB_ENV
+        echo "TF_VAR_resource_group_name=${AZ_RESOURCE_GROUP}" >> $GITHUB_ENV
+        echo "TF_VAR_storage_account_name=${AZRM_STORAGE_ACCOUNT}" >> $GITHUB_ENV
+        echo "TF_VAR_container_name=${AZRM_CONTAINER_NAME}" >> $GITHUB_ENV
+        echo "TF_VAR_cluster_name=${AKS_CLUSTER_NAME_REACT}" >> $GITHUB_ENV
+        echo "TF_VAR_location=${AZ_REGION}" >> $GITHUB_ENV
+  
 
     - name: Display environment variables
       run: |
-        echo "Region: $TF_VAR_region"
-        echo "Zone: $TF_VAR_zone"
+        echo "location: $TF_VAR_location"
+        echo "resource_group_name: $TF_VAR_resource_group_name"
+        echo "storage_account_name: $TF_VAR_storage_account_name"
+        echo "Azurerm Container Name: $TF_VAR_container_name"
         echo "Cluster Name: $TF_VAR_cluster_name"
 
     - name: Terraform Init
