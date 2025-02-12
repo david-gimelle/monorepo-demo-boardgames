@@ -50,6 +50,8 @@ The building and deployment of the python app uses this files
 
 In short the python app is build as a docker image, this image is pushed to github packages, then this image is deployed on the GKE cluster. The GKE cluster is created by a separete github workflow using terraform and kubernetes manifest file.
 
+More details on this implementation are available in this medium article: [How to Provision a GKE cluster with Github Action](https://medium.com/@davidgimelle/how-to-provision-a-cluster-on-gke-using-terraform-and-github-action-89680ff03f83) 
+
 Provisioning of the cluster with github action and terraform:
 ```mermaid
 graph TD
