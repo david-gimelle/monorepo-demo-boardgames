@@ -1,4 +1,4 @@
-name: Terraform react App
+name: Terraform React App
 
 on:
   push:
@@ -13,12 +13,23 @@ jobs:
   terraform:
     runs-on: ubuntu-latest
 
+    permissions:
+      id-token: write
+      contents: read
+
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
 
     - name: Set up Terraform
       uses: hashicorp/setup-terraform@v2
+
+    - name: Log in to Azure using OIDC
+      uses: azure/login@v1
+      with:
+        client-id: ${{ secrets.AZURE_CLIENT_ID }}
+        tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+        subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
 
     - name: Set environment variables
       env:
@@ -33,7 +44,6 @@ jobs:
         echo "TF_VAR_container_name=${AZRM_CONTAINER_NAME}" >> $GITHUB_ENV
         echo "TF_VAR_cluster_name=${AKS_CLUSTER_NAME_REACT}" >> $GITHUB_ENV
         echo "TF_VAR_location=${AZ_REGION}" >> $GITHUB_ENV
-  
 
     - name: Display environment variables
       run: |
