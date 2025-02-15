@@ -26,6 +26,7 @@ jobs:
       uses: azure/login@v1
       with:
         creds: ${{ secrets.AZURE_CREDENTIALS }}
+      continue-on-error: false
 
     - name: Terraform Init
       run: terraform init
