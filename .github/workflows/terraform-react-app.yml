@@ -8,67 +8,24 @@ on:
     branches:
       - main
   workflow_dispatch:
-
-permissions:
-      id-token: write
-      contents: read
-      pull-requests: write
-      
-env:
-    ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
-    ARM_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
-    ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
-    ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-
+    
 jobs:
   terraform:
     runs-on: ubuntu-latest
 
     steps:
     - name: Checkout code
-      uses: actions/checkout@v4
+      uses: actions/checkout@v2
 
     - name: Set up Terraform
       uses: hashicorp/setup-terraform@v2
+      with:
+        terraform_version: 1.0.0
 
-    - name: Set environment variables
-      env:
-        AZ_RESOURCE_GROUP: ${{ vars.AZ_RESOURCE_GROUP }}
-        AZRM_STORAGE_ACCOUNT: ${{ vars.AZRM_STORAGE_ACCOUNT}}
-        AZRM_CONTAINER_NAME: ${{ vars.AZRM_CONTAINER_NAME }}
-        AKS_CLUSTER_NAME_REACT: ${{ vars.AKS_CLUSTER_NAME_REACT }}
-        AZ_REGION: ${{ vars.AZ_REGION }}
-      run: |
-        echo "TF_VAR_client_id=${ARM_CLIENT_ID}" >> $GITHUB_ENV
-        echo "TF_VAR_client_secret=${ARM_CLIENT_SECRET}" >> $GITHUB_ENV
-        echo "TF_VAR_tenant_id=${ARM_TENANT_ID}" >> $GITHUB_ENV
-        echo "TF_VAR_subscription_id=${ARM_SUBSCRIPTION_ID}" >> $GITHUB_ENV
-        echo "TF_VAR_resource_group_name=${AZ_RESOURCE_GROUP}" >> $GITHUB_ENV
-        echo "TF_VAR_storage_account_name=${AZRM_STORAGE_ACCOUNT}" >> $GITHUB_ENV
-        echo "TF_VAR_container_name=${AZRM_CONTAINER_NAME}" >> $GITHUB_ENV
-        echo "TF_VAR_cluster_name=${AKS_CLUSTER_NAME_REACT}" >> $GITHUB_ENV
-        echo "TF_VAR_location=${AZ_REGION}" >> $GITHUB_ENV
-
-    - name: Display environment variables
-      run: |
-        echo "client_id: $TF_VAR_client_id"
-        echo "tenant_id: $TF_VAR_tenant_id"
-        echo "subscription_id: $TF_VAR_subscription_id"
-        echo "location: $TF_VAR_location"
-        echo "resource_group_name: $TF_VAR_resource_group_name"
-        echo "storage_account_name: $TF_VAR_storage_account_name"
-        echo "Azurerm Container Name: $TF_VAR_container_name"
-        echo "Cluster Name: $TF_VAR_cluster_name"
+    - name: Azure Login
+      uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
 
     - name: Terraform Init
       run: terraform init
-      working-directory: ./terraform/envs/dev/react
-
-    - name: Terraform Plan
-      run: terraform plan -out=tfplan
-      working-directory: ./terraform/envs/dev/react
-
-    - name: Terraform Apply
-      if: github.ref == 'refs/heads/main' 
-      run: terraform apply -auto-approve -json tfplan
-      working-directory: ./terraform/envs/dev/react
