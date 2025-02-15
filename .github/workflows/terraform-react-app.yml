@@ -9,13 +9,20 @@ on:
       - main
   workflow_dispatch:
 
+permissions:
+      id-token: write
+      contents: read
+      pull-requests: write
+      
+env:
+    ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+    ARM_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
+    ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+    ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
 jobs:
   terraform:
     runs-on: ubuntu-latest
-
-    permissions:
-      id-token: write
-      contents: read
 
     steps:
     - name: Checkout code
@@ -26,10 +33,6 @@ jobs:
 
     - name: Set environment variables
       env:
-        ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
-        ARM_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
-        ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
-        ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
         AZ_RESOURCE_GROUP: ${{ vars.AZ_RESOURCE_GROUP }}
         AZRM_STORAGE_ACCOUNT: ${{ vars.AZRM_STORAGE_ACCOUNT}}
         AZRM_CONTAINER_NAME: ${{ vars.AZRM_CONTAINER_NAME }}
