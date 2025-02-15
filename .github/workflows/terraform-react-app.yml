@@ -26,20 +26,20 @@ jobs:
 
     - name: Set environment variables
       env:
-        AZURE_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
-        AZURE_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
-        AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
-        AZURE_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+        ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+        ARM_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
+        ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+        ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
         AZ_RESOURCE_GROUP: ${{ vars.AZ_RESOURCE_GROUP }}
         AZRM_STORAGE_ACCOUNT: ${{ vars.AZRM_STORAGE_ACCOUNT}}
         AZRM_CONTAINER_NAME: ${{ vars.AZRM_CONTAINER_NAME }}
         AKS_CLUSTER_NAME_REACT: ${{ vars.AKS_CLUSTER_NAME_REACT }}
         AZ_REGION: ${{ vars.AZ_REGION }}
       run: |
-        echo "TF_VAR_client_id=${AZURE_CLIENT_ID}" >> $GITHUB_ENV
-        echo "TF_VAR_client_secret=${AZURE_CLIENT_SECRET}" >> $GITHUB_ENV
-        echo "TF_VAR_tenant_id=${AZURE_TENANT_ID}" >> $GITHUB_ENV
-        echo "TF_VAR_subscription_id=${AZURE_SUBSCRIPTION_ID}" >> $GITHUB_ENV
+        echo "TF_VAR_client_id=${ARM_CLIENT_ID}" >> $GITHUB_ENV
+        echo "TF_VAR_client_secret=${ARM_CLIENT_SECRET}" >> $GITHUB_ENV
+        echo "TF_VAR_tenant_id=${ARM_TENANT_ID}" >> $GITHUB_ENV
+        echo "TF_VAR_subscription_id=${ARM_SUBSCRIPTION_ID}" >> $GITHUB_ENV
         echo "TF_VAR_resource_group_name=${AZ_RESOURCE_GROUP}" >> $GITHUB_ENV
         echo "TF_VAR_storage_account_name=${AZRM_STORAGE_ACCOUNT}" >> $GITHUB_ENV
         echo "TF_VAR_container_name=${AZRM_CONTAINER_NAME}" >> $GITHUB_ENV
