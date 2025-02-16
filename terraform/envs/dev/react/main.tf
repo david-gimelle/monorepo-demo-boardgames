@@ -30,6 +30,11 @@ resource "azurerm_kubernetes_cluster" "main" {
   dns_prefix         = var.cluster_name
   kubernetes_version = "1.26"
 
+  / Add explicit configurations for newer SDK
+  role_based_access_control_enabled = true
+  public_network_access_enabled    = true
+  private_cluster_enabled         = false
+
   default_node_pool {
     name                = "default"
     node_count          = 1
