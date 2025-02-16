@@ -30,7 +30,7 @@ jobs:
 
     - name: Terraform Init
       run: terraform init
-      working-directory: ./terraform/envs/dev/node
+      working-directory: ./terraform/envs/dev/react
    
 
       
