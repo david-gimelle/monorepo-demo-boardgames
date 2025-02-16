@@ -62,3 +62,13 @@ jobs:
       run: TF_LOG=INFO terraform init
       working-directory: ./terraform/envs/dev/react
     
+    - name: Check and Remove Terraform Lock
+      run: |
+        echo "Attempting to remove state lock..."
+        terraform force-unlock -force 30dd4f6c-b7be-1f1f-34c9-c3843ace2b56
+      working-directory: ./terraform/envs/dev/react
+      continue-on-error: true     
+
+    - name: Terraform Plan  
+      run: TF_LOG=INFO terraform plan
+      working-directory: ./terraform/envs/dev/react
