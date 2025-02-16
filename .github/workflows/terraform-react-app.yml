@@ -18,20 +18,26 @@ jobs:
       ARM_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
       ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
       ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+      TF_VAR_client_id: ${{ secrets.AZURE_CLIENT_ID }}
+      TF_VAR_client_secret: ${{ secrets.AZURE_CLIENT_SECRET }}
+      TF_VAR_subscription_id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+      TF_VAR_tenant_id: ${{ secrets.AZURE_TENANT_ID }}
+      TF_VAR_resource_group_name: ${{ vars.AZ_RESOURCE_GROUP }}
 
     steps:
     - name: Checkout code
       uses: actions/checkout@v2
 
-    - name: Debug Directory Structure
+    - name: Create Terraform Variables
       run: |
-        echo "Current directory: $(pwd)"
-        echo "Directory contents:"
-        ls -la
-        echo "Terraform directory structure:"
-        find ./terraform -type d
-        echo "React directory contents:"
-        ls -la ./terraform/envs/dev/react || echo "React directory not found"
+        cat > ./terraform/envs/dev/react/terraform.tfvars <<EOF
+        client_id       = "${{ secrets.AZURE_CLIENT_ID }}"
+        client_secret   = "${{ secrets.AZURE_CLIENT_SECRET }}"
+        tenant_id       = "${{ secrets.AZURE_TENANT_ID }}"
+        subscription_id = "${{ secrets.AZURE_SUBSCRIPTION_ID }}"
+        resource_group_name = "${{ vars.AZ_RESOURCE_GROUP }}"
+        EOF
+      working-directory: .
 
     - name: Set up Terraform
       uses: hashicorp/setup-terraform@v2
