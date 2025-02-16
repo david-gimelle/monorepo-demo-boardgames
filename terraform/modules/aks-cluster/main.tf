@@ -24,7 +24,7 @@ resource "azurerm_kubernetes_cluster" "main" {
     load_balancer_sku = "standard"
   }
 
-    http_application_routing_enabled = true
+  http_application_routing_enabled = true
 
   auto_scaler_profile {
     scale_down_delay_after_add = "10m"
