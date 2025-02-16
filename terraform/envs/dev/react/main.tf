@@ -6,10 +6,10 @@ terraform {
     }
   }
   backend "azurerm" {
-    resource_group_name  = "terraform-state-rg"
-    storage_account_name = "boardgamestfstate"
+    resource_group_name  = "momorepo1"
+    storage_account_name = "monorepoterraform"
     container_name      = "tfstate"
-    key                 = "terraform/react/state/test"
+    key                 = "terraform/react/state/dev.tfstate"
   }
 }
 
