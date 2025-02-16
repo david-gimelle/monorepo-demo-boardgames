@@ -8,7 +8,7 @@ terraform {
   backend "azurerm" {
     resource_group_name  = "momorepo1"
     storage_account_name = "monorepoterraform"
-    container_name      = "tfstate"
+    container_name      = "tfstate2"
     key                 = "terraform/react/state/dev.tfstate"
   }
 }
