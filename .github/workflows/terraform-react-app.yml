@@ -42,19 +42,19 @@ jobs:
       uses: azure/login@v1
       with:
         creds: ${{ secrets.AZURE_CREDENTIALS }}
-      continue-on-error: false
+      continue-on-error: false  
 
+    - name: Terraform Init
+      run: TF_LOG=INFO terraform init
+      working-directory: ./terraform/envs/dev/react
+    
     - name: Check and Remove Terraform Lock
       run: |
         echo "Attempting to remove state lock..."
         terraform force-unlock -force dc350cbf-0075-db54-c8a0-f61bcc9dab49
       working-directory: ./terraform/envs/dev/react
-      continue-on-error: true    
+      continue-on-error: true     
 
-    - name: Terraform Init
-      run: TF_LOG=INFO terraform init
-      working-directory: ./terraform/envs/dev/react
-     
     - name: Terraform Plan  
       run: TF_LOG=TRACE terraform plan
       working-directory: ./terraform/envs/dev/react
