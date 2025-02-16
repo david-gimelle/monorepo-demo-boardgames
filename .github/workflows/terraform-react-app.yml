@@ -32,7 +32,6 @@ jobs:
       run: terraform init
       working-directory: ./terraform/envs/dev/node
    
-    - name: Terraform Plan
-      run: terraform plan -out=tfplan
-      working-directory: ./terraform/envs/dev/node
-         
+
+      
+
