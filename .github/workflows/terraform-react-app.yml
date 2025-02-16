@@ -35,9 +35,9 @@ jobs:
       continue-on-error: false
 
     - name: Terraform Init
-      run: terraform init
+      run: TF_LOG=DEBUG terraform init - verbose
       working-directory: ./terraform/envs/dev/react
-
-    - name: Terraform Plan
-      run: terraform plan
-      working-directory: ./terraform/envs/dev/react   
+     
+    - name: Terraform Plan  
+      run: terraform plan -verbose
+      working-directory: ./terraform/envs/dev/react    
