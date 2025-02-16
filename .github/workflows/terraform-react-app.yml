@@ -62,5 +62,5 @@ jobs:
       continue-on-error: true     
 
     - name: Terraform Plan  
-      run: TF_LOG=TRACE terraform plan
+      run: TF_LOG=INFO terraform plan
       working-directory: ./terraform/envs/dev/react
