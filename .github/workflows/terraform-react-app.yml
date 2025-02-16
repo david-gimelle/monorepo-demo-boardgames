@@ -45,14 +45,9 @@ jobs:
       continue-on-error: false
 
     - name: Terraform Init
-      run: |
-        cd ./terraform/envs/dev/react
-        echo "Working directory: $(pwd)"
-        ls -la
-        TF_LOG=TRACE terraform init
-      shell: bash
+      run: TF_LOG=INFO terraform init -verbose
+      working-directory: ./terraform/envs/dev/react
      
     - name: Terraform Plan  
-      if: success()
-      run: terraform plan -out=tfplan
+      run: terraform plan
       working-directory: ./terraform/envs/dev/react
