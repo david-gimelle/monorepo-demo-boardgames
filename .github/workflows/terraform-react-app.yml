@@ -66,5 +66,5 @@ jobs:
       working-directory: ./terraform/envs/dev/react
 
     - name: Terraform Apply
-      run: TF_LOG=INFO terraform apply
+      run: TF_LOG=INFO terraform apply -auto-approve
       working-directory: ./terraform/envs/dev/react  
