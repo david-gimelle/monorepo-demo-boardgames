@@ -51,11 +51,14 @@ jobs:
         enable-AzPSSession: true
       continue-on-error: false 
       
-
+      
     - name: Verify Azure Permissions
       run: |
         az account show
         az aks list --resource-group ${{ vars.AZ_RESOURCE_GROUP }}
       continue-on-error: true
 
- 
+    - name: Terraform Init
+      run: TF_LOG=INFO terraform init
+      working-directory: ./terraform/envs/dev/react
+    
