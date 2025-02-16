@@ -48,7 +48,15 @@ jobs:
       uses: azure/login@v1
       with:
         creds: ${{ secrets.AZURE_CREDENTIALS }}
-      continue-on-error: false  
+        enable-AzPSSession: true
+      continue-on-error: false 
+      
+      
+    - name: Verify Azure Permissions
+      run: |
+        az account show
+        az aks list --resource-group ${{ vars.AZ_RESOURCE_GROUP }}
+      continue-on-error: true
 
     - name: Terraform Init
       run: TF_LOG=INFO terraform init
