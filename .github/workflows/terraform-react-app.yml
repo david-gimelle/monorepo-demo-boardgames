@@ -49,5 +49,5 @@ jobs:
       working-directory: ./terraform/envs/dev/react
      
     - name: Terraform Plan  
-      run: terraform plan
+      run: TF_LOG=TRACE terraform plan -verbose
       working-directory: ./terraform/envs/dev/react
