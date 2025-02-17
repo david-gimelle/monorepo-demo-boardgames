@@ -1,80 +1,80 @@
 variable "cluster_name" {
-  description = "The name of the AKS cluster"
   type        = string
+  description = "The name of the AKS cluster"
 }
 
 variable "location" {
-  description = "The Azure region where the cluster will be created"
   type        = string
+  description = "The Azure location where the cluster will be created"
 }
 
 variable "resource_group_name" {
-  description = "The name of the resource group"
   type        = string
+  description = "The name of the resource group"
 }
 
 variable "kubernetes_version" {
-  description = "Version of Kubernetes to use"
   type        = string
+  description = "The version of Kubernetes"
   default     = "1.26"
 }
 
 variable "node_count" {
-  description = "The initial number of nodes"
   type        = number
+  description = "The initial number of nodes"
   default     = 1
 }
 
 variable "vm_size" {
-  description = "The size of the Virtual Machine"
   type        = string
-  default     = "Standard_B2s"
+  description = "The size of the VMs"
+  default     = "Standard_D2s_v3"
 }
 
 variable "os_disk_size_gb" {
-  description = "The size of the OS disk in GB"
   type        = number
+  description = "The OS disk size in GB"
   default     = 30
 }
 
 variable "enable_auto_scaling" {
-  description = "Enable node pool autoscaling"
   type        = bool
+  description = "Enable node pool autoscaling"
   default     = true
 }
 
 variable "min_count" {
-  description = "Minimum number of nodes for autoscaling"
   type        = number
+  description = "Minimum number of nodes"
   default     = 1
 }
 
 variable "max_count" {
-  description = "Maximum number of nodes for autoscaling"
   type        = number
+  description = "Maximum number of nodes"
   default     = 3
 }
 
-variable "tags" {
-  description = "A mapping of tags to assign to the resource"
-  type        = map(string)
-  default     = {}
-}
-
 variable "create_timeout" {
-  description = "Timeout for creating the cluster"
   type        = string
+  description = "Timeout for creating the cluster"
   default     = "30m"
 }
 
 variable "update_timeout" {
-  description = "Timeout for updating the cluster"
   type        = string
+  description = "Timeout for updating the cluster"
   default     = "30m"
 }
 
 variable "delete_timeout" {
-  description = "Timeout for deleting the cluster"
   type        = string
+  description = "Timeout for deleting the cluster"
   default     = "30m"
+}
+
+variable "tags" {
+  type        = map(string)
+  description = "Tags to apply to resources"
+  default     = {}
 }

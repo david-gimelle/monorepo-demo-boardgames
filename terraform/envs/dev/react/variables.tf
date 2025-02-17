@@ -22,13 +22,11 @@ variable "subscription_id" {
 variable "cluster_name" {
   description = "The name of the AKS cluster"
   type        = string
-  default     = "react-aks-cluster"
 }
 
 variable "location" {
   description = "The Azure region to deploy the AKS cluster"
   type        = string
-  default     = "uksouth"
 }
 
 variable "resource_group_name" {
