@@ -15,6 +15,7 @@ env:
   APP_NAME: reactjs-boardgames 
   WORKING_DIR: reactjs-boardgames
   PORT: 8282
+  BRANCH_NAME: '' 
 
 jobs:
   build:
