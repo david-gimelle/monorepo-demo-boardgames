@@ -67,7 +67,7 @@ jobs:
    #add a job to deploy this image to AKS
   deploy:
     runs-on: ubuntu-latest
-    needs: call-build-image-push
+    needs: [call-build-image-push, build]
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
@@ -83,7 +83,10 @@ jobs:
       uses: david-gimelle/lab/.github/actions/extract-branch-name@main
   
     - name: Set branch name from composite action
-      run: echo "BRANCH_NAME=${{ steps.extract-branch-name.outputs.branch_name }}" >> $GITHUB_ENV  
+      run: echo "BRANCH_NAME=${{ steps.extract-branch-name.outputs.branch_name }}" >> $GITHUB_ENV 
+      
+    - name: Set timestamp from build job
+      run: echo "TIMESTAMP=${{ needs.build.outputs.TIMESTAMP }}" >> $GITHUB_ENV  
      
     #add a step to deploy the create the namespace
     - name: Create namespace
