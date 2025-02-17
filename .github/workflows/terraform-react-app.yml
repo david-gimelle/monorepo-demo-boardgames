@@ -69,7 +69,7 @@ jobs:
     - name: Check and Remove Terraform Lock
       run: |
         echo "Attempting to remove state lock..."
-        terraform force-unlock -force f4393aa8-920b-e173-3009-8db5df0de67e
+        terraform force-unlock -force 32d43711-f200-20fc-f394-98f7394fe3f6
       working-directory: ./terraform/envs/dev/react
       continue-on-error: true     
 
