@@ -32,7 +32,6 @@ resource "azurerm_kubernetes_cluster" "main" {
 
   // Add explicit configurations for newer SDK
   role_based_access_control_enabled = true
-  public_network_access_enabled    = true
   private_cluster_enabled         = false
 
   default_node_pool {
