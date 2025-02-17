@@ -29,7 +29,7 @@ module "aks_cluster" {
   cluster_name         = var.cluster_name
   location            = var.location
   resource_group_name = var.resource_group_name
-  kubernetes_version  = "1.27.7"
+  kubernetes_version  = "1.29.13"
   
   node_count          = 1
   vm_size            = "Standard_B2s"
