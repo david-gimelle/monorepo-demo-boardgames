@@ -82,20 +82,33 @@ jobs:
             --namespace=${{ needs.build.outputs.K8S_NAMESPACE }} \
             --dry-run=client -o yaml | kubectl apply -f -
   
-    - name: Deploy to AKS
-      run: |
-        # Create namespace if it doesn't exist
-        kubectl create namespace ${K8S_NAMESPACE} --dry-run=client -o yaml | kubectl apply -f -
-
-        # Set environment variables for better readability
-        DEPLOYMENT_NAME="${{ needs.build.outputs.APP_NAME }}"
-        NAMESPACE="${{ needs.build.outputs.K8S_NAMESPACE }}"
-        IMAGE="ghcr.io/${{ secrets.GHCR_USERNAME }}/${{ needs.build.outputs.APP_NAME }}:${{ needs.build.outputs.TIMESTAMP }}"
-
-        # Update deployment with new image
-        kubectl set image "deployment/${DEPLOYMENT_NAME}" "${DEPLOYMENT_NAME}=${IMAGE}" --namespace="${NAMESPACE}"
-
-        # Patch deployment to use image pull secret
-        kubectl patch deployment "${DEPLOYMENT_NAME}" \
-          --namespace="${NAMESPACE}" \
-          --patch '{"spec": {"template": {"spec": {"imagePullSecrets": [{"name": "ghcr-secret"}]}}}}'
+              - name: Deploy to AKS
+              run: |
+                # Create namespace if it doesn't exist
+                kubectl create namespace ${{ env.K8S_NAMESPACE }} --dry-run=client -o yaml | kubectl apply -f -
+        
+                # Create or update deployment
+                cat <<EOF | kubectl apply -f -
+                apiVersion: apps/v1
+                kind: Deployment
+                metadata:
+                  name: ${{ env.APP_NAME }}
+                  namespace: ${{ env.K8S_NAMESPACE }}
+                spec:
+                  replicas: 1
+                  selector:
+                    matchLabels:
+                      app: ${{ env.APP_NAME }}
+                  template:
+                    metadata:
+                      labels:
+                        app: ${{ env.APP_NAME }}
+                    spec:
+                      containers:
+                      - name: ${{ env.APP_NAME }}
+                        image: ghcr.io/${{ secrets.GHCR_USERNAME }}/${{ env.APP_NAME }}:${{ needs.build.outputs.TIMESTAMP }}
+                        ports:
+                        - containerPort: ${{ env.PORT }}
+                      imagePullSecrets:
+                      - name: ghcr-secret
+                EOF
