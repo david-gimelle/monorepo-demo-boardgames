@@ -88,12 +88,18 @@ jobs:
       
     - name: Create Docker registry secret
       run: |
+        # Check if secret exists
+        if ! kubectl get secret ghcr-secret -n ${{ env.K8S_NAMESPACE }} >/dev/null 2>&1; then
+          # Create secret if it doesn't exist
           kubectl create secret docker-registry ghcr-secret \
             --docker-server=ghcr.io \
             --docker-username=${{ github.actor }} \
             --docker-password=${{ secrets.GHCR_PAT }} \
             --docker-email=${{ github.actor }}@users.noreply.github.com \
             --namespace=${{ env.K8S_NAMESPACE }}
+        else
+          echo "Secret already exists"
+        fi
 
     - name: Apply Kubernetes manifests
       run: |
