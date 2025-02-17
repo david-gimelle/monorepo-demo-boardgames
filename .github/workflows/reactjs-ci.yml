@@ -84,7 +84,18 @@ jobs:
   
     - name: Deploy to AKS
       run: |
-          # Update deployment with new image (fix: remove line break)
-          kubectl set image deployment/${{ needs.build.outputs.APP_NAME }} ${{ needs.build.outputs.APP_NAME }}=ghcr.io/${{ secrets.GHCR_USERNAME }}/${{ needs.build.outputs.APP_NAME }}:${{ needs.build.outputs.TIMESTAMP }} -n ${{ needs.build.outputs.K8S_NAMESPACE }}
-          # Patch deployment to use image pull secret
-          kubectl patch deployment ${{ needs.build.outputs.APP_NAME }} -n ${{ needs.build.outputs.K8S_NAMESPACE }} --patch '{"spec": {"template": {"spec": {"imagePullSecrets": [{"name": "ghcr-secret"}]}}}}'
+        # Create namespace if it doesn't exist
+        kubectl create namespace ${K8S_NAMESPACE} --dry-run=client -o yaml | kubectl apply -f -
+
+        # Set environment variables for better readability
+        DEPLOYMENT_NAME="${{ needs.build.outputs.APP_NAME }}"
+        NAMESPACE="${{ needs.build.outputs.K8S_NAMESPACE }}"
+        IMAGE="ghcr.io/${{ secrets.GHCR_USERNAME }}/${{ needs.build.outputs.APP_NAME }}:${{ needs.build.outputs.TIMESTAMP }}"
+
+        # Update deployment with new image
+        kubectl set image "deployment/${DEPLOYMENT_NAME}" "${DEPLOYMENT_NAME}=${IMAGE}" --namespace="${NAMESPACE}"
+
+        # Patch deployment to use image pull secret
+        kubectl patch deployment "${DEPLOYMENT_NAME}" \
+          --namespace="${NAMESPACE}" \
+          --patch '{"spec": {"template": {"spec": {"imagePullSecrets": [{"name": "ghcr-secret"}]}}}}'
