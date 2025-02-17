@@ -72,3 +72,31 @@ jobs:
       with:
         kubeconfig: ${{ secrets.KUBE_CONFIG }}
         context: ${{ secrets.KUBE_CONTEXT }}
+    
+    - name: Call composite action to extract branch name
+      id: extract-branch-name
+      uses: david-gimelle/lab/.github/actions/extract-branch-name@main
+  
+    - name: Set branch name from composite action
+      run: echo "BRANCH_NAME=${{ steps.extract-branch-name.outputs.branch_name }}" >> $GITHUB_ENV  
+     
+    #add a step to deploy the create the namespace
+    - name: Create namespace
+      run: kubectl create namespace ${{ env.K8S_NAMESPACE }}
+      continue-on-error: true  
+      
+    - name: Create Docker registry secret
+      run: |
+          kubectl create secret docker-registry ghcr-secret \
+            --docker-server=ghcr.io \
+            --docker-username=${{ github.actor }} \
+            --docker-password=${{ secrets.GHCR_PAT }} \
+            --docker-email=${{ github.actor }}@users.noreply.github.com \
+            --namespace=${{ env.K8S_NAMESPACE }}
+
+    - name: Apply Kubernetes manifests
+      run: |
+        kubectl apply -f k8s/test/${{ env.APP_NAME }}.yml
+
+    - name: Display full image name
+      run: echo "Full image name ghcr.io/${{ github.repository }}/${{ env.APP_NAME }}:${{ env.BRANCH_NAME }}-${{ env.TIMESTAMP }}"    
