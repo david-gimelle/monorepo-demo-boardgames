@@ -5,14 +5,15 @@ resource "azurerm_kubernetes_cluster" "main" {
   dns_prefix         = var.cluster_name
   kubernetes_version = var.kubernetes_version
 
+  role_based_access_control_enabled = true
+  private_cluster_enabled         = false
+
   default_node_pool {
     name                = "default"
     node_count          = var.node_count
     vm_size            = var.vm_size
     os_disk_size_gb    = var.os_disk_size_gb
     enable_auto_scaling = var.enable_auto_scaling
-    min_count          = var.min_count
-    max_count          = var.max_count
   }
 
   identity {
@@ -22,13 +23,6 @@ resource "azurerm_kubernetes_cluster" "main" {
   network_profile {
     network_plugin    = "kubenet"
     load_balancer_sku = "standard"
-  }
-
-  http_application_routing_enabled = true
-
-  auto_scaler_profile {
-    scale_down_delay_after_add = "10m"
-    scan_interval             = "10s"
   }
 
   timeouts {

@@ -23,40 +23,19 @@ provider "azurerm" {
   subscription_id = var.subscription_id
 }
 
-resource "azurerm_kubernetes_cluster" "main" {
-  name                = var.cluster_name
+module "aks_cluster" {
+  source = "../../../modules/aks-cluster"
+
+  cluster_name         = var.cluster_name
   location            = var.location
   resource_group_name = var.resource_group_name
-  dns_prefix         = var.cluster_name
-  kubernetes_version = "1.29.13"
-
-  // Add explicit configurations for newer SDK
-  role_based_access_control_enabled = true
-  private_cluster_enabled         = false
-
-  default_node_pool {
-    name                = "default"
-    node_count          = 1
-    vm_size            = "Standard_B2s"
-    os_disk_size_gb    = 30
-    enable_auto_scaling = false
-  }
-
-  identity {
-    type = "SystemAssigned"
-  }
-
-  network_profile {
-    network_plugin    = "kubenet"
-    load_balancer_sku = "standard"
-  }
-
-  timeouts {
-    create = "30m"
-    update = "30m"
-    delete = "30m"
-  }
-
+  kubernetes_version  = "1.29.13"
+  
+  node_count          = 1
+  vm_size            = "Standard_B2s"
+  os_disk_size_gb    = 30
+  enable_auto_scaling = false
+  
   tags = {
     Environment = "test"
     ManagedBy   = "terraform"

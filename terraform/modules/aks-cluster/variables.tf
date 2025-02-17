@@ -5,76 +5,63 @@ variable "cluster_name" {
 
 variable "location" {
   type        = string
-  description = "The Azure location where the cluster will be created"
+  description = "Azure region where resources will be created"
 }
 
 variable "resource_group_name" {
   type        = string
-  description = "The name of the resource group"
+  description = "Name of the resource group"
 }
 
 variable "kubernetes_version" {
   type        = string
-  description = "The version of Kubernetes"
-  default     = "1.26"
+  description = "Version of Kubernetes to use"
 }
 
 variable "node_count" {
   type        = number
-  description = "The initial number of nodes"
   default     = 1
+  description = "Number of nodes in the default node pool"
 }
 
 variable "vm_size" {
   type        = string
-  description = "The size of the VMs"
-  default     = "Standard_D2s_v3"
+  default     = "Standard_B2s"
+  description = "Size of the VM to use for nodes"
 }
 
 variable "os_disk_size_gb" {
   type        = number
-  description = "The OS disk size in GB"
   default     = 30
+  description = "Size of the OS disk in GB"
 }
 
 variable "enable_auto_scaling" {
   type        = bool
+  default     = false
   description = "Enable node pool autoscaling"
-  default     = true
-}
-
-variable "min_count" {
-  type        = number
-  description = "Minimum number of nodes"
-  default     = 1
-}
-
-variable "max_count" {
-  type        = number
-  description = "Maximum number of nodes"
-  default     = 3
 }
 
 variable "create_timeout" {
   type        = string
-  description = "Timeout for creating the cluster"
   default     = "30m"
+  description = "Timeout for creating the cluster"
 }
 
 variable "update_timeout" {
   type        = string
-  description = "Timeout for updating the cluster"
   default     = "30m"
+  description = "Timeout for updating the cluster"
 }
 
 variable "delete_timeout" {
   type        = string
-  description = "Timeout for deleting the cluster"
   default     = "30m"
+  description = "Timeout for deleting the cluster"
 }
 
 variable "tags" {
   type        = map(string)
-  description = "Tags to apply to resources"
   default     = {}
+  description = "Tags to apply to all resources"
 }
