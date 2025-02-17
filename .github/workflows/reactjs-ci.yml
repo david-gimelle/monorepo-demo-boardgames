@@ -88,6 +88,4 @@ jobs:
                   kubectl set image deployment/${{ needs.build.outputs.APP_NAME }} ${{ needs.build.outputs.APP_NAME }}=ghcr.io/${{ secrets.GHCR_USERNAME }}/${{ needs.build.outputs.APP_NAME }}:${{ needs.build.outputs.TIMESTAMP }} -n ${{ needs.build.outputs.K8S_NAMESPACE }}
                   
                   # Patch deployment to use image pull secret
-                  kubectl patch deployment ${{ needs.build.outputs.APP_NAME }} \
-                    -n ${{ needs.build.outputs.K8S_NAMESPACE }} \
-                    --patch '{"spec": {"template": {"spec": {"imagePullSecrets": [{"name": "ghcr-secret"}]}}}}'
+                  kubectl patch deployment ${{ needs.build.outputs.APP_NAME }} -n ${{ needs.build.outputs.K8S_NAMESPACE }} --patch '{"spec": {"template": {"spec": {"imagePullSecrets": [{"name": "ghcr-secret"}]}}}}'
