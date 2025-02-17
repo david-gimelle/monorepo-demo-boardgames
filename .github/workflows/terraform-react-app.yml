@@ -23,6 +23,7 @@ jobs:
       TF_VAR_subscription_id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
       TF_VAR_tenant_id: ${{ secrets.AZURE_TENANT_ID }}
       TF_VAR_resource_group_name: ${{ vars.AZ_RESOURCE_GROUP }}
+      TF_VAR_location: ${{ vars.AZ_REGION }}
 
     steps:
     - name: Checkout code
@@ -36,6 +37,7 @@ jobs:
         tenant_id       = "${{ secrets.AZURE_TENANT_ID }}"
         subscription_id = "${{ secrets.AZURE_SUBSCRIPTION_ID }}"
         resource_group_name = "${{ vars.AZ_RESOURCE_GROUP }}"
+        location = "${{ vars.AZ_REGION }}"
         EOF
       working-directory: .
 
