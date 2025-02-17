@@ -28,7 +28,7 @@ resource "azurerm_kubernetes_cluster" "main" {
   location            = var.location
   resource_group_name = var.resource_group_name
   dns_prefix         = var.cluster_name
-  kubernetes_version = "1.26"
+  kubernetes_version = "1.29.13"
 
   // Add explicit configurations for newer SDK
   role_based_access_control_enabled = true
