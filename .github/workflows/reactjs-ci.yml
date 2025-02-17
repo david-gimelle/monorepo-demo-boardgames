@@ -73,6 +73,23 @@ jobs:
         kubeconfig: ${{ secrets.KUBE_CONFIG }}
         context: ${{ secrets.KUBE_CONTEXT }}
 
+    - name: Create Image Pull Secret
+      run: |
+          kubectl create secret docker-registry ghcr-secret \
+            --docker-server=ghcr.io \
+            --docker-username=${{ secrets.GHCR_USERNAME }} \
+            --docker-password=${{ secrets.GHCR_PAT }} \
+            --namespace=${{ needs.build.outputs.K8S_NAMESPACE }} \
+            --dry-run=client -o yaml | kubectl apply -f -
+  
     - name: Deploy to AKS
       run: |
-        kubectl set image deployment/${{ needs.build.outputs.APP_NAME }} ${{ needs.build.outputs.APP_NAME }}=ghcr.io/${{ secrets.GHCR_USERNAME }}/${{ needs.build.outputs.APP_NAME }}:${{ needs.build.outputs.TIMESTAMP }} -n ${{ needs.build.outputs.K8S_NAMESPACE }}       
+          # Update deployment with new image
+          kubectl set image deployment/${{ needs.build.outputs.APP_NAME }} \
+            ${{ needs.build.outputs.APP_NAME }}=ghcr.io/${{ secrets.GHCR_USERNAME }}/${{ needs.build.outputs.APP_NAME }}:${{ needs.build.outputs.TIMESTAMP }} \
+            -n ${{ needs.build.outputs.K8S_NAMESPACE }}
+          
+          # Patch deployment to use image pull secret
+          kubectl patch deployment ${{ needs.build.outputs.APP_NAME }} \
+            -n ${{ needs.build.outputs.K8S_NAMESPACE }} \
+            --patch '{"spec": {"template": {"spec": {"imagePullSecrets": [{"name": "ghcr-secret"}]}}}}'
