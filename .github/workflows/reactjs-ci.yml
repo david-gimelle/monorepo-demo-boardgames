@@ -10,10 +10,10 @@ on:
   workflow_dispatch:
 
 env:
-  K8S_NAMESPACE: reactjs-boardgames-api
-  K8S_SERVICE_NAME: reactjs-boardgames-api-service
-  APP_NAME: reactjs-boardgames-api 
-  WORKING_DIR: reactjs-boardgames-api 
+  K8S_NAMESPACE: reactjs-boardgames
+  K8S_SERVICE_NAME: reactjs-boardgames-service
+  APP_NAME: reactjs-boardgames 
+  WORKING_DIR: reactjs-boardgames
   PORT: 8282
 
 jobs:
