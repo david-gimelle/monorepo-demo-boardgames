@@ -9,13 +9,32 @@ on:
       - main
   workflow_dispatch:
 
+env:
+  K8S_NAMESPACE: reactjs-boardgames
+  K8S_SERVICE_NAME: reactjs-boardgames-service
+  APP_NAME: reactjs-boardgames 
+  WORKING_DIR: reactjs-boardgames
+  PORT: 8282
+  BRANCH_NAME: '' 
+
 jobs:
   build:
     runs-on: ubuntu-latest
+    outputs:
+      APP_NAME: ${{ env.APP_NAME }}
+      WORKING_DIR: ${{ env.WORKING_DIR }}
+      K8S_NAMESPACE: ${{ env.K8S_NAMESPACE }}
+      K8S_SERVICE_NAME: ${{ env.K8S_SERVICE_NAME }}
+      PORT: ${{ env.PORT }}
+      TIMESTAMP: ${{ steps.set-timestamp.outputs.timestamp }}
 
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
+
+    - name: Set timestamp
+      id: set-timestamp
+      run: echo "timestamp=$(date -u +%Y%m%d%H%M%S)" >> $GITHUB_OUTPUT     
 
     - name: Set up Node.js
       uses: actions/setup-node@v2
@@ -27,9 +46,105 @@ jobs:
       working-directory: ./reactjs-boardgames
 
     - name: Build the project
-      run: npm run build
+      run: npm run build``
       working-directory: ./reactjs-boardgames
 
     - name: Run tests
       run: npm test
       working-directory: ./reactjs-boardgames
+
+  call-build-image-push:
+        uses: david-gimelle/lab/.github/workflows/build-image-push-to-ghcr.yml@main
+        needs: build
+        
+        with:
+          APP_NAME: ${{ needs.build.outputs.APP_NAME }}
+          WORKING_DIR: ${{ needs.build.outputs.WORKING_DIR }}
+          timestamp: ${{ needs.build.outputs.TIMESTAMP }}
+        secrets:
+          GHCR_PAT: ${{ secrets.GHCR_PAT }}   
+          
+  deploy:
+    runs-on: ubuntu-latest
+    needs: [call-build-image-push, build]
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Set up kubectl
+      uses: azure/k8s-set-context@v1
+      with:
+        kubeconfig: ${{ secrets.KUBE_CONFIG }}
+        context: ${{ secrets.KUBE_CONTEXT }}
+    
+    - name: Call composite action to extract branch name
+      id: extract-branch-name
+      uses: david-gimelle/lab/.github/actions/extract-branch-name@main
+  
+    - name: Set branch name from composite action
+      run: echo "BRANCH_NAME=${{ steps.extract-branch-name.outputs.branch_name }}" >> $GITHUB_ENV 
+      
+    - name: Set timestamp from build job
+      run: echo "TIMESTAMP=${{ needs.build.outputs.TIMESTAMP }}" >> $GITHUB_ENV  
+     
+    #add a step to deploy the create the namespace
+    - name: Create namespace
+      run: kubectl create namespace ${{ env.K8S_NAMESPACE }}
+      continue-on-error: true  
+      
+    - name: Create Docker registry secret
+      run: |
+        # Check if secret exists
+        if ! kubectl get secret ghcr-secret -n ${{ env.K8S_NAMESPACE }} >/dev/null 2>&1; then
+          # Create secret if it doesn't exist
+          kubectl create secret docker-registry ghcr-secret \
+            --docker-server=ghcr.io \
+            --docker-username=${{ github.actor }} \
+            --docker-password=${{ secrets.GHCR_PAT }} \
+            --docker-email=${{ github.actor }}@users.noreply.github.com \
+            --namespace=${{ env.K8S_NAMESPACE }}
+        else
+          echo "Secret already exists"
+        fi
+
+    - name: Apply Kubernetes manifests
+      run: |
+        kubectl apply -f k8s/test/${{ env.APP_NAME }}.yml
+
+    - name: Display full image name
+      run: echo "Full image name ghcr.io/${{ github.repository }}/${{ env.APP_NAME }}:${{ env.BRANCH_NAME }}-${{ env.TIMESTAMP }}" 
+      
+    - name: Deploy to AKS
+      run: 
+        kubectl patch deployment ${{ env.APP_NAME }} -n ${{ env.K8S_NAMESPACE }} -p "{\"spec\":{\"template\":{\"metadata\":{\"annotations\":{\"kubectl.kubernetes.io/restartedAt\":\"$(date +%s)\"}}}}}"
+
+        kubectl set image deployment/${{ env.APP_NAME }} ${{ env.APP_NAME }}=ghcr.io/${{ github.repository }}/${{ env.APP_NAME }}:${{ env.BRANCH_NAME }}-${{ env.TIMESTAMP }} --namespace ${{ env.K8S_NAMESPACE }}
+
+        echo "Checking deployed image version..."
+        kubectl get deployment ${{ env.APP_NAME }} -n ${{ env.K8S_NAMESPACE }} -o jsonpath='{.spec.template.spec.containers[0].image}'
+    
+    - name: Check Deployment Status
+      run: |
+        kubectl rollout status deployment/${{ env.APP_NAME }} --namespace ${{ env.K8S_NAMESPACE }}
+        
+        kubectl describe deployment ${{ env.APP_NAME }} --namespace ${{ env.K8S_NAMESPACE }} | grep Image
+
+    - name: Wait for Service to be Ready
+      run: |
+        sleep 10
+    
+    - name: Ping Endpoint
+      run: |
+          EXTERNAL_IP=$(kubectl get service ${{ env.K8S_SERVICE_NAME }} --namespace=${{ env.K8S_NAMESPACE }} -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
+          echo "External IP: $EXTERNAL_IP"
+          if [ -z "$EXTERNAL_IP" ]; then
+            echo "External IP not returned, maybe it has not been created yet. Try to run this failing workflow again"
+            exit 1
+          fi
+          curl --fail http://$EXTERNAL_IP:${{ env.PORT }}/ping
+      
+    - name: Check Health Endpoint
+      run: |
+          EXTERNAL_IP=$(kubectl get service ${{ env.K8S_SERVICE_NAME }} --namespace=${{ env.K8S_NAMESPACE }} -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
+          echo "External IP: $EXTERNAL_IP"
+          curl --fail http://$EXTERNAL_IP:${{ env.PORT }}/health   
