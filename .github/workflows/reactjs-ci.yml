@@ -64,7 +64,6 @@ jobs:
         secrets:
           GHCR_PAT: ${{ secrets.GHCR_PAT }}   
           
-   #add a job to deploy this image to AKS
   deploy:
     runs-on: ubuntu-latest
     needs: [call-build-image-push, build]
@@ -113,4 +112,39 @@ jobs:
         kubectl apply -f k8s/test/${{ env.APP_NAME }}.yml
 
     - name: Display full image name
-      run: echo "Full image name ghcr.io/${{ github.repository }}/${{ env.APP_NAME }}:${{ env.BRANCH_NAME }}-${{ env.TIMESTAMP }}"    
+      run: echo "Full image name ghcr.io/${{ github.repository }}/${{ env.APP_NAME }}:${{ env.BRANCH_NAME }}-${{ env.TIMESTAMP }}" 
+      
+    - name: Deploy to AKS
+      run: 
+        kubectl patch deployment ${{ env.APP_NAME }} -n ${{ env.K8S_NAMESPACE }} -p "{\"spec\":{\"template\":{\"metadata\":{\"annotations\":{\"kubectl.kubernetes.io/restartedAt\":\"$(date +%s)\"}}}}}"
+
+        kubectl set image deployment/${{ env.APP_NAME }} ${{ env.APP_NAME }}=ghcr.io/${{ github.repository }}/${{ env.APP_NAME }}:${{ env.BRANCH_NAME }}-${{ env.TIMESTAMP }} --namespace ${{ env.K8S_NAMESPACE }}
+
+        echo "Checking deployed image version..."
+        kubectl get deployment ${{ env.APP_NAME }} -n ${{ env.K8S_NAMESPACE }} -o jsonpath='{.spec.template.spec.containers[0].image}'
+    
+    - name: Check Deployment Status
+      run: |
+        kubectl rollout status deployment/${{ env.APP_NAME }} --namespace ${{ env.K8S_NAMESPACE }}
+        
+        kubectl describe deployment ${{ env.APP_NAME }} --namespace ${{ env.K8S_NAMESPACE }} | grep Image
+
+    - name: Wait for Service to be Ready
+      run: |
+        sleep 10
+    
+    - name: Ping Endpoint
+      run: |
+          EXTERNAL_IP=$(kubectl get service ${{ env.K8S_SERVICE_NAME }} --namespace=${{ env.K8S_NAMESPACE }} -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
+          echo "External IP: $EXTERNAL_IP"
+          if [ -z "$EXTERNAL_IP" ]; then
+            echo "External IP not returned, maybe it has not been created yet. Try to run this failing workflow again"
+            exit 1
+          fi
+          curl --fail http://$EXTERNAL_IP:${{ env.PORT }}/ping
+      
+    - name: Check Health Endpoint
+      run: |
+          EXTERNAL_IP=$(kubectl get service ${{ env.K8S_SERVICE_NAME }} --namespace=${{ env.K8S_NAMESPACE }} -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
+          echo "External IP: $EXTERNAL_IP"
+          curl --fail http://$EXTERNAL_IP:${{ env.PORT }}/health   
